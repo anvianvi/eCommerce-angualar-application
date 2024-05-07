@@ -1,3 +1,6 @@
+[Jira-bord](https://rs-s2-final.atlassian.net/jira/core/projects/EAA/board)
+[tg-group](https://t.me/+7TSW_kS5faBlYmJi)
+
 # ECommerceApplication
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.

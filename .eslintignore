@@ -1,0 +1,5 @@
+node_modules/
+build/
+dist/
+# src/mock-data
+src/main.ts
