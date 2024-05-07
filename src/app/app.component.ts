@@ -10,4 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'e-commerce-application';
+
+  sum(a: number, b: number) {
+    return a + b;
+  }
 }
