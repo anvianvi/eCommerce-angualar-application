@@ -17,7 +17,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           routerLink="/registration"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
-          >go to the main</a
+          >go to the regestration</a
         >
       </li>
       <li>
@@ -25,7 +25,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           routerLink="/login"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
-          >go to the main</a
+          >go to the login</a
         >
       </li>
     </ul>`,

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './shared/components/main.component';
-import { LoginComponent } from './auth/components/login.componet copy';
-import { RegistrationComponent } from './auth/components/registration .componet';
+import { RegistrationComponent } from './auth/components/registration.componet';
 import { NotFoundComponent } from './shared/components/404-page.component';
+import { LoginComponent } from './auth/components/login.componet';
 
 export const routes: Routes = [
   {
