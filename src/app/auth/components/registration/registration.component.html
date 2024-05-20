@@ -1,0 +1,170 @@
+<form [formGroup]="registrationForm" class="regestration-form">
+  <h2>Registration</h2>
+  <!-- Email Field -->
+
+  <mat-form-field>
+    <mat-label>Enter your email</mat-label>
+    <input
+      matInput
+      placeholder="example@email.com"
+      [formControl]="registrationForm.controls.email"
+      (blur)="updateErrorMessages()"
+      required
+    />
+    @if (registrationForm.controls.email.hasError("required")) {
+      <mat-error>You must enter an email</mat-error>
+    }
+    @if (registrationForm.controls.email.hasError("email")) {
+      <mat-error>Provide valid email</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Password Fields -->
+
+  <mat-form-field>
+    <mat-label>Enter your password</mat-label>
+    <input
+      matInput
+      [formControl]="registrationForm.controls.password"
+      [type]="hidepassword ? 'password' : 'text'"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="hidepassword = !hidepassword"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidepassword"
+    >
+      <mat-icon>{{ hidepassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    @if (passwordFormField?.dirty) {
+      <mat-error>{{ errorMessage.password }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Confirm your password</mat-label>
+    <input
+      matInput
+      [formControl]="registrationForm.controls.confirmPassword"
+      [type]="hidepassword ? 'password' : 'text'"
+    />
+    @if (registrationForm.controls.confirmPassword.invalid) {
+      <mat-error>{{ errorMessage.confirmPassword }}</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- name Field -->
+
+  <mat-form-field>
+    <mat-label>First name</mat-label>
+    <input
+      matInput
+      formControlName="firstName"
+      placeholder="Enter your first name"
+    />
+    @if (registrationForm.controls.firstName.hasError("required")) {
+      <mat-error>Name is required</mat-error>
+    }
+    @if (registrationForm.controls.firstName.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Last name</mat-label>
+    <input
+      matInput
+      formControlName="lastName"
+      placeholder="Enter your last name"
+    />
+    @if (registrationForm.controls.lastName.hasError("required")) {
+      <mat-error>Last name is required</mat-error>
+    }
+    @if (registrationForm.controls.lastName.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      placeholder="Date of Birth"
+      formControlName="dateOfBirth"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    @if (registrationForm.controls.dateOfBirth.hasError("required")) {
+      <mat-error>Date of Birth is required</mat-error>
+    }
+    @if (registrationForm.controls.dateOfBirth.hasError("invalidDateOfBirth")) {
+      <mat-error>You must be at least 13 years old</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- adress Fields -->
+  <h2>Delivery information</h2>
+
+  <mat-form-field>
+    <input matInput placeholder="Street" formControlName="street" />
+    <mat-error> Street is required </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="City" formControlName="city" />
+    @if (registrationForm.controls.city.hasError("required")) {
+      <mat-error>City is required</mat-error>
+    }
+    @if (registrationForm.controls.city.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Country" formControlName="country">
+      @for (country of countries; track country) {
+        <mat-option [value]="country">{{ country }}</mat-option>
+      }
+    </mat-select>
+    @if (registrationForm.controls.country.hasError("required")) {
+      <mat-error> Country is required</mat-error>
+    }
+    @if (registrationForm.controls.country.hasError("invalidCountry")) {
+      <mat-error>Country must be a valid country from the list</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field style="margin-bottom: 25px">
+    <input matInput placeholder="Postal Code" formControlName="postalCode" />
+    @if (registrationForm.controls.postalCode.hasError("required")) {
+      <mat-error>Postal code is required</mat-error>
+    }
+    @if (registrationForm.controls.postalCode.hasError("invalidPostalCode")) {
+      <mat-error>
+        Postal code must follow the correct format.<br />
+        Example: 12345, 12345-6789, A1B 2C3</mat-error
+      >
+    }
+  </mat-form-field>
+
+  <div class="buttons-container">
+    <a
+      routerLink="/login"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      mat-button
+      >Login</a
+    >
+
+    <button
+      type="submit"
+      [disabled]="!registrationForm.valid || submitInProcess()"
+      class="button"
+      mat-button
+      (click)="onSubmit()"
+    >
+      Register
+    </button>
+  </div>
+</form>

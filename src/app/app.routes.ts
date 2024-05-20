@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './shared/components/main.component';
-import { RegistrationComponent } from './auth/components/registration.componet';
+import { RegistrationComponent } from './auth/components/registration/registration.componet';
 import { NotFoundComponent } from './shared/components/404-page.component';
 import { LoginComponent } from './auth/components/login.componet';
 

@@ -7,7 +7,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   standalone: true,
   selector: 'app-logi-page',
-  template: `some login page
+  template: `
+  some login page
     <li>
       <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page"
         >go to the main</a
