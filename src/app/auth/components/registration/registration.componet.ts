@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   FormGroup,
   Validators,
@@ -8,6 +8,8 @@ import {
   FormControl,
   AbstractControl,
   ValidationErrors,
+  FormBuilder,
+  ValidatorFn,
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +19,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Observable, Subject, merge, takeUntil } from 'rxjs';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
@@ -40,134 +41,105 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent implements OnInit, OnDestroy {
+export class RegistrationComponent {
   minDate: Date;
-
+  registrationForm: FormGroup;
   hidepassword = true;
-  private destroy$ = new Subject<void>();
   countries = ['Poland', 'United States', 'Canada'];
   submitInProcess = signal(false);
 
-  errorMessage = {
-    email: '',
-    password: '',
-    confirmPassword: '',
-  };
-
-  StrongPasswordRegx: RegExp =
-    /^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=\D*\d).{8,}$/;
-
-  registrationForm = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
-    password: new FormControl<string>('', [
-      Validators.required,
-      Validators.pattern(this.StrongPasswordRegx),
-    ]),
-    confirmPassword: new FormControl<string>('', [
-      Validators.required,
-      Validators.pattern(this.StrongPasswordRegx),
-    ]),
-    firstName: new FormControl<string>('', [
-      Validators.required,
-      Validators.pattern('[a-zA-Z]+'),
-    ]),
-    lastName: new FormControl<string>('', [
-      Validators.required,
-      Validators.pattern('[a-zA-Z]+'),
-    ]),
-    dateOfBirth: new FormControl<string>('', [
-      Validators.required,
-      this.dateOfBirthValidator.bind(this),
-    ]),
-    street: new FormControl<string>('', [Validators.required]),
-    city: new FormControl<string>('', [
-      Validators.required,
-      Validators.pattern('[a-zA-Z]+'),
-    ]),
-    country: new FormControl<string>('', [
-      Validators.required,
-      this.countryValidator(this.countries),
-    ]),
-    postalCode: new FormControl<string>('', [
-      Validators.required,
-      this.postalCodeValidator,
-    ]),
-  });
-
-  get passwordFormField() {
-    return this.registrationForm.get('password');
-  }
-
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+  ) {
     this.minDate = this.calculateMinDate(13);
-  }
 
-  ngOnInit(): void {
-    // this.minDate = this.calculateMinDate(13);
-
-    const formControls = ['password', 'confirmPassword'];
-    const formChanges: Observable<unknown>[] = formControls.flatMap(
-      (controlName) => [
-        this.registrationForm.get(controlName)
-          ?.statusChanges as Observable<unknown>,
-        this.registrationForm.get(controlName)
-          ?.valueChanges as Observable<unknown>,
-      ],
+    this.registrationForm = this.fb.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, this.passwordValidator]],
+        confirmPassword: ['', [Validators.required]],
+        firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+        lastName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+        dateOfBirth: [
+          '',
+          [Validators.required, this.dateOfBirthValidator.bind(this)],
+        ],
+        street: ['', [Validators.required]],
+        city: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
+        country: [
+          '',
+          [Validators.required, this.countryValidator(this.countries)],
+        ],
+        postalCode: ['', [Validators.required, this.postalCodeValidator]],
+      },
+      {
+        validators: [
+          this.confirmPasswordValidator('password', 'confirmPassword'),
+        ],
+      },
     );
-
-    merge(...formChanges)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.updateErrorMessages());
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
 
-  updateErrorMessages() {
-    const passwordControl = this.registrationForm.get('password');
-    const confirmPasswordControl = this.registrationForm.get('confirmPassword');
-
-    if (this.passwordFormField?.dirty) {
-      this.errorMessage.password = this.getPasswordRecommendation();
+    if (!/[a-z]/.test(value)) {
+      return { noLowerCase: true };
     }
 
-    if (confirmPasswordControl?.hasError('required')) {
-      this.errorMessage.confirmPassword = 'You must confirm your password';
-    } else if (confirmPasswordControl?.value !== passwordControl?.value) {
-      this.errorMessage.confirmPassword = 'Passwords do not match';
-    }
-  }
-
-  getPasswordRecommendation(): string {
-    const value = this.registrationForm.get('password')?.value || '';
-
-    const hasLowerCase = /[a-z]/.test(value);
-    if (!hasLowerCase) {
-      return 'Password must include at least one lowercase letter';
+    if (!/[A-Z]/.test(value)) {
+      return { noUpperCase: true };
     }
 
-    const hasUpperCase = /[A-Z]/.test(value);
-    if (!hasUpperCase) {
-      return 'Password must include at least one uppercase letter';
+    if (!/\d/.test(value)) {
+      return { noDigit: true };
     }
 
-    const hasNumber = /\d/.test(value);
-    if (!hasNumber) {
-      return 'Password must include at least one digit';
-    }
-
-    const hasSpecialChar = /(?=.*\W)/.test(value);
-    if (!hasSpecialChar) {
-      return 'Password must include at least one special character (!@#?)';
+    if (!/(?=.*\W)/.test(value)) {
+      return { noSimbol: true };
     }
 
     if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
+      return { tooShort: true };
     }
 
-    return '';
+    return null;
+  }
+
+  confirmPasswordValidator(
+    controlName: string,
+    checkControlName: string,
+  ): ValidatorFn {
+    return (controls: AbstractControl) => {
+      const control = controls.get(controlName);
+      const checkControl = controls.get(checkControlName);
+
+      if (checkControl?.errors && !checkControl.errors['matching']) {
+        return null;
+      }
+
+      if (control?.value !== checkControl?.value) {
+        controls.get(checkControlName)?.setErrors({ matching: true });
+        return { matching: true };
+      } else {
+        return null;
+      }
+    };
+  }
+
+  passwordMatchValidator(formGroup: FormGroup): ValidationErrors | null {
+    const passwordControl = formGroup.get('password');
+    const confirmPasswordControl = formGroup.get('confirmPassword');
+    if (
+      passwordControl &&
+      confirmPasswordControl &&
+      passwordControl.value !== confirmPasswordControl.value
+    ) {
+      return { passwordMismatch: true };
+    } else {
+      return null;
+    }
   }
 
   postalCodeValidator(control: AbstractControl): ValidationErrors | null {
@@ -175,7 +147,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const caRegex = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
     const plRegex = /^\d{2}-\d{3}$/;
     const value = control.value;
-
     if (usRegex.test(value) || caRegex.test(value) || plRegex.test(value)) {
       return null;
     }
@@ -212,25 +183,46 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     return minDate;
   }
 
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  countryCodes: { [key: string]: string } = {
+    Poland: 'PL',
+    'United States': 'US',
+    Canada: 'CA',
+  };
+
   onSubmit() {
-    const body = this.registrationForm.value;
+    const dateOfBirth = this.registrationForm.get('dateOfBirth')?.value;
+    const formattedDateOfBirth = dateOfBirth
+      ? this.formatDate(new Date(dateOfBirth))
+      : '';
+
+    const countryName = this.registrationForm.get('country')?.value;
+    const countryCode = this.countryCodes[countryName];
+
+    const body = {
+      email: this.registrationForm.value.email,
+      password: this.registrationForm.value.password,
+      firstName: this.registrationForm.value.firstName,
+      lastName: this.registrationForm.value.lastName,
+      dateOfBirth: formattedDateOfBirth,
+      addresses: [
+        {
+          streetName: this.registrationForm.value.street,
+          city: this.registrationForm.value.city,
+          postalCode: this.registrationForm.value.postalCode,
+          country: countryCode,
+        },
+      ],
+    };
+
     console.log('submit triggered');
     console.log(body);
-    //   {
-    //     "email": "example@email.com",
-    //     "password": "user_password",
-    //     "firstName": "John",
-    //     "lastName": "Doe",
-    //     "dateOfBirth": "1980-01-01",
-    //     "addresses": [
-    //         {
-    //             "streetName": "Main Street",
-    //             "city": "Anytown",
-    //             "postalCode": "12345",
-    //             "country": "US"
-    //         }
-    //     ]
-    // }
     this.http
       .post(
         'https://api.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905/customers',
