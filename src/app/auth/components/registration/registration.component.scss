@@ -16,17 +16,6 @@
     margin: 0;
   }
 
-  .email-errors-contaner,
-  .username-errors-container,
-  .confirm-pass-error {
-    height: 16px;
-    color: #eb5757;
-  }
-
-  .error-border {
-    border-bottom: 5px solid #eb5757;
-  }
-
   .buttons-container {
     display: flex;
     justify-content: space-between;
@@ -38,6 +27,7 @@
       height: 30px;
       text-decoration: underline;
     }
+
     .button {
       background: #2f80ed;
       color: #ffffff;
@@ -45,6 +35,7 @@
       height: 30px;
       font-size: 12px;
     }
+
     .button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
