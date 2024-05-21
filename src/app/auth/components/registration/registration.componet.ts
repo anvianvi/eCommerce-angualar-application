@@ -13,11 +13,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { CustomValidatorsService } from '../services/custom-validators.service';
 import { FormatDataService } from '../../../shared/services/format-date.service';
+import { SnackbarService } from '../../../shared/services/mat-snackbar.service';
+import {
+  AuthCustomerService,
+  CustomerRegestrationForm,
+} from '../services/customer-auth.service';
+import { CustomerResponse } from '../services/interfaces';
 
 @Component({
   imports: [
@@ -27,6 +34,7 @@ import { FormatDataService } from '../../../shared/services/format-date.service'
     MatIconModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
     RouterOutlet,
@@ -51,6 +59,8 @@ export class RegistrationComponent {
     private fb: FormBuilder,
     private CustomValidators: CustomValidatorsService,
     private FormatData: FormatDataService,
+    private snackbarService: SnackbarService,
+    private authService: AuthCustomerService,
   ) {
     this.registrationForm = this.fb.group(
       {
@@ -102,7 +112,7 @@ export class RegistrationComponent {
       this.registrationForm.get('dateOfBirth')?.value,
     );
 
-    const body = {
+    const body: CustomerRegestrationForm = {
       email: this.registrationForm.value.email,
       password: this.registrationForm.value.password,
       firstName: this.registrationForm.value.firstName,
@@ -120,14 +130,41 @@ export class RegistrationComponent {
 
     console.log('submit triggered');
     console.log(body);
-    this.http
-      .post(
-        'https://api.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905/customers',
-        body,
-      )
-      .subscribe(
-        (response) => console.log(response),
-        (error) => console.error(error),
-      );
+    this.authService.createCustomer(body).subscribe({
+      next: (response: CustomerResponse) => {
+        console.log(response);
+
+        this.authService.customerLogin().subscribe({
+          next: (response: CustomerResponse) => {
+            console.log('here is login response');
+            console.log(response);
+
+            this.authService.tokenForAnanimus().subscribe({
+              next: (result) => {
+                console.log('hre is token response');
+                console.log(result);
+              },
+              error: (err) => console.error(err),
+            });
+
+            // Handle successful response (e.g., login, redirect, etc.)
+          },
+          error: (error: unknown) => {
+            console.error(error);
+            // Error handling is already managed in the service
+          },
+          complete: () => {
+            console.log('Request complete');
+          },
+        });
+      },
+      error: (error: unknown) => {
+        console.error(error);
+        // Error handling is already managed in the service
+      },
+      complete: () => {
+        console.log('Request complete');
+      },
+    });
   }
 }
