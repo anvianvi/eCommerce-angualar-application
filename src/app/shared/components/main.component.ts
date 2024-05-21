@@ -7,10 +7,9 @@ import {
 } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { MatButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  imports: [MatButton, MatTooltip, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [MatButton, RouterOutlet, RouterLink, RouterLinkActive],
   standalone: true,
   selector: 'app-main',
   template: `

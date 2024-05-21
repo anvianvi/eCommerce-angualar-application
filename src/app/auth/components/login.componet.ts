@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -154,7 +153,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient,
     private fb: FormBuilder,
     private authCustomerService: AuthCustomerService,
   ) {
@@ -171,7 +169,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitInProcess.set(true);
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 
@@ -189,7 +186,6 @@ export class LoginComponent implements OnInit {
       },
       complete: () => {
         console.log('Request complete');
-        // this.submitInProcess.set(false);
       },
     });
   }
