@@ -4,9 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
 import {
   Router,
   RouterLink,
@@ -173,7 +171,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.submitInProcess.set(true);
+    this.submitInProcess.set(true);
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 
@@ -181,12 +179,13 @@ export class LoginComponent implements OnInit {
 
     this.authCustomerService.customerLogin(email, password).subscribe({
       next: (response: CustomerResponse) => {
-        console.log('here is login response');
+        console.log('here is onSubmit login form response response');
         console.log(response);
-        // process login
-        // rederect
-        // need to setup auth guard
-        //need to check tocken
+        console.log(response.customer.id);
+        if (response.customer.id) {
+          this.authService.login(response.customer.id);
+          this.router.navigate(['/']);
+        }
       },
       complete: () => {
         console.log('Request complete');

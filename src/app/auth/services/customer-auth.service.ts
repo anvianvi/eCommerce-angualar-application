@@ -50,15 +50,12 @@ export class AuthCustomerService {
       );
   }
 
-  customerLogin(
-    email: string = 'anvianvi@gmail.com',
-    password: string = 'Qwer1234%',
-  ): Observable<CustomerResponse> {
+  customerLogin(email: string, password: string): Observable<CustomerResponse> {
     return this.http
       .post<CustomerResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap((response) => {
-          console.log('hrere is access_token');
+          console.log('here is response from customerLogin');
           console.log(response);
           // sessionStorage.setItem('auth_token', response.access_token); // Store the token
         }),
