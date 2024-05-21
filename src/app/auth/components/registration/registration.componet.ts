@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import {
   FormGroup,
   Validators,
@@ -15,7 +15,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { CustomValidatorsService } from '../../services/custom-validators.service';
 import { FormatDataService } from '../../../shared/services/format-date.service';
@@ -25,6 +30,7 @@ import {
   CustomerRegestrationForm,
 } from '../../services/customer-auth.service';
 import { CustomerResponse } from '../../services/interfaces';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   imports: [
@@ -47,7 +53,11 @@ import { CustomerResponse } from '../../services/interfaces';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
+
   registrationForm: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
@@ -55,12 +65,14 @@ export class RegistrationComponent {
   countries = ['Poland', 'United States', 'Canada'];
 
   constructor(
+    private authService: AuthService,
+    private router: Router,
     private http: HttpClient,
     private fb: FormBuilder,
     private CustomValidators: CustomValidatorsService,
     private FormatData: FormatDataService,
     private snackbarService: SnackbarService,
-    private authService: AuthCustomerService,
+    private authCustomerService: AuthCustomerService,
   ) {
     this.registrationForm = this.fb.group(
       {
@@ -104,6 +116,12 @@ export class RegistrationComponent {
     );
   }
 
+  ngOnInit(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/']);
+    }
+  }
+
   onSubmit() {
     const countryCode = this.FormatData.getCountyCode(
       this.registrationForm.get('country')?.value,
@@ -130,33 +148,33 @@ export class RegistrationComponent {
 
     console.log('submit triggered');
     console.log(body);
-    this.authService.createCustomer(body).subscribe({
+    this.authCustomerService.createCustomer(body).subscribe({
       next: (response: CustomerResponse) => {
         console.log(response);
 
-        this.authService.customerLogin().subscribe({
-          next: (response: CustomerResponse) => {
-            console.log('here is login response');
-            console.log(response);
+        // this.authCustomerService.customerLogin().subscribe({
+        //   next: (response: CustomerResponse) => {
+        //     console.log('here is login response');
+        //     console.log(response);
 
-            this.authService.tokenForAnanimus().subscribe({
-              next: (result) => {
-                console.log('hre is token response');
-                console.log(result);
-              },
-              error: (err) => console.error(err),
-            });
+        //     this.authCustomerService.tokenForAnanimus().subscribe({
+        //       next: (result) => {
+        //         console.log('hre is token response');
+        //         console.log(result);
+        //       },
+        //       error: (err) => console.error(err),
+        //     });
 
-            // Handle successful response (e.g., login, redirect, etc.)
-          },
-          error: (error: unknown) => {
-            console.error(error);
-            // Error handling is already managed in the service
-          },
-          complete: () => {
-            console.log('Request complete');
-          },
-        });
+        //     // Handle successful response (e.g., login, redirect, etc.)
+        //   },
+        //   error: (error: unknown) => {
+        //     console.error(error);
+        //     // Error handling is already managed in the service
+        //   },
+        //   complete: () => {
+        //     console.log('Request complete');
+        //   },
+        // });
       },
       error: (error: unknown) => {
         console.error(error);

@@ -1,5 +1,11 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, OnInit, computed } from '@angular/core';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
@@ -31,6 +37,19 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     </ul>`,
   styles: ``,
 })
-export class MainComponent {
-  // component logic
+export class MainComponent implements OnInit {
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    if (!this.isAuthenticated()) {
+      this.router.navigate(['/login']);
+    }
+  }
 }

@@ -1,14 +1,25 @@
 import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
 import { AuthService } from '../../auth/services/auth.service';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  imports: [ProfileStatusBarfoComponent],
+  imports: [
+    ProfileStatusBarfoComponent,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+  ],
   selector: 'app-header',
   standalone: true,
   template: `<header class="header-content-wrapper">
     <div class="logo-container">
-      <a routerLink="/" aria-label="Logo">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        aria-label="Logo"
+      >
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>

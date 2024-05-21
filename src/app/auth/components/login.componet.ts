@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -7,7 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -17,6 +22,7 @@ import {
 } from '@angular/forms';
 import { CustomerResponse } from '../services/interfaces';
 import { AuthCustomerService } from '../services/customer-auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   imports: [
@@ -139,20 +145,31 @@ import { AuthCustomerService } from '../services/customer-auth.service';
     }
   `,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
   loginForm: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
   constructor(
+    private authService: AuthService,
+    private router: Router,
     private http: HttpClient,
     private fb: FormBuilder,
-    private authService: AuthCustomerService,
+    private authCustomerService: AuthCustomerService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/']);
+    }
   }
 
   onSubmit() {
@@ -162,7 +179,7 @@ export class LoginComponent {
 
     console.log(email, password);
 
-    this.authService.customerLogin(email, password).subscribe({
+    this.authCustomerService.customerLogin(email, password).subscribe({
       next: (response: CustomerResponse) => {
         console.log('here is login response');
         console.log(response);
