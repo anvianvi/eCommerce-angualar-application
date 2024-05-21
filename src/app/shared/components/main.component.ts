@@ -6,36 +6,42 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [MatButton, MatTooltip, RouterOutlet, RouterLink, RouterLinkActive],
   standalone: true,
   selector: 'app-main',
-  template: ` here shoud be main????? page
-    <ul>
-      <li>
-        <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page"
-          >go to the main</a
-        >
-      </li>
-      <li>
-        <a
-          routerLink="/registration"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >go to the regestration</a
-        >
-      </li>
-      <li>
-        <a
-          routerLink="/login"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >go to the login</a
-        >
-      </li>
-    </ul>`,
-  styles: ``,
+  template: `
+    <h1>Navigation:</h1>
+    <p>
+      When clicked, you will be redirected to the selected page directly (for
+      login or registration, an automatic loginout will occur)
+    </p>
+    <div class="buttons-container">
+      <button mat-button (click)="toMain()">main</button>
+      <button mat-button (click)="toLogin()">login</button>
+      <button mat-button (click)="toRegistration()">regestration</button>
+    </div>
+  `,
+  styles: `
+    ::ng-deep app-main {
+      margin: 45px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      background: #f2f2f2;
+      max-width: 330px;
+      padding: 15px;
+    }
+
+    .buttons-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+  `,
 })
 export class MainComponent implements OnInit {
   isAuthenticated = computed(() => {
@@ -51,5 +57,16 @@ export class MainComponent implements OnInit {
     if (!this.isAuthenticated()) {
       this.router.navigate(['/login']);
     }
+  }
+  toMain() {
+    this.router.navigate(['/']);
+  }
+  toLogin() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+  toRegistration() {
+    this.authService.logout();
+    this.router.navigate(['/registration']);
   }
 }
