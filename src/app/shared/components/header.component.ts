@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   imports: [ProfileStatusBarfoComponent],
@@ -11,7 +12,9 @@ import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>
-    <app-profile-status-bar></app-profile-status-bar>
+    @if (isAuthenticated()) {
+      <app-profile-status-bar></app-profile-status-bar>
+    }
   </header> `,
   styles: [
     `
@@ -50,5 +53,9 @@ import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
   ],
 })
 export class HeaderComponent {
-  // component logic
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
+
+  constructor(private authService: AuthService) {}
 }
