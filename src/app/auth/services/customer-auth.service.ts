@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { SnackbarService } from '../../../shared/services/mat-snackbar.service';
+import { SnackbarService } from '../../shared/services/mat-snackbar.service';
 import { AuthResponse, CustomerResponse } from './interfaces';
 
 export type CustomerRegestrationForm = {

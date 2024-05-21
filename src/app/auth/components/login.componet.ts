@@ -15,8 +15,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerResponse } from './services/interfaces';
-import { AuthCustomerService } from './services/customer-auth.service';
+import { CustomerResponse } from '../services/interfaces';
+import { AuthCustomerService } from '../services/customer-auth.service';
 
 @Component({
   imports: [

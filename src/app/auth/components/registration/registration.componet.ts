@@ -17,14 +17,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { CustomValidatorsService } from '../services/custom-validators.service';
+import { CustomValidatorsService } from '../../services/custom-validators.service';
 import { FormatDataService } from '../../../shared/services/format-date.service';
 import { SnackbarService } from '../../../shared/services/mat-snackbar.service';
 import {
   AuthCustomerService,
   CustomerRegestrationForm,
-} from '../services/customer-auth.service';
-import { CustomerResponse } from '../services/interfaces';
+} from '../../services/customer-auth.service';
+import { CustomerResponse } from '../../services/interfaces';
 
 @Component({
   imports: [
