@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import {
   FormGroup,
@@ -67,7 +66,6 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient,
     private fb: FormBuilder,
     private CustomValidators: CustomValidatorsService,
     private FormatData: FormatDataService,
@@ -150,35 +148,30 @@ export class RegistrationComponent implements OnInit {
     console.log(body);
     this.authCustomerService.createCustomer(body).subscribe({
       next: (response: CustomerResponse) => {
+        console.log('here is sucsses users regestration response');
         console.log(response);
 
-        // this.authCustomerService.customerLogin().subscribe({
-        //   next: (response: CustomerResponse) => {
-        //     console.log('here is login response');
-        //     console.log(response);
+        this.authCustomerService
+          .customerLogin(body.email, body.password)
+          .subscribe({
+            next: (response: CustomerResponse) => {
+              console.log('here is login response');
+              console.log(response);
 
-        //     this.authCustomerService.tokenForAnanimus().subscribe({
-        //       next: (result) => {
-        //         console.log('hre is token response');
-        //         console.log(result);
-        //       },
-        //       error: (err) => console.error(err),
-        //     });
-
-        //     // Handle successful response (e.g., login, redirect, etc.)
-        //   },
-        //   error: (error: unknown) => {
-        //     console.error(error);
-        //     // Error handling is already managed in the service
-        //   },
-        //   complete: () => {
-        //     console.log('Request complete');
-        //   },
-        // });
+              if (response.customer.id) {
+                this.authService.login(response.customer.id);
+                this.router.navigate(['/']);
+                this.snackbarService.show(
+                  'Successfully registered and logged in',
+                  'Close',
+                  3000,
+                );
+              }
+            },
+          });
       },
       error: (error: unknown) => {
         console.error(error);
-        // Error handling is already managed in the service
       },
       complete: () => {
         console.log('Request complete');
