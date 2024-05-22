@@ -1,0 +1,182 @@
+<form [formGroup]="registrationForm" class="regestration-form">
+  <h2>Registration</h2>
+  <!-- Email Field -->
+
+  <mat-form-field>
+    <mat-label>Enter your email</mat-label>
+    <input matInput placeholder="example@email.com" formControlName="email" />
+    @if (registrationForm.get("email")?.hasError("required")) {
+      <mat-error>You must enter an email</mat-error>
+    }
+    @if (registrationForm.get("email")?.hasError("email")) {
+      <mat-error>Provide valid email</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Password Fields -->
+
+  <mat-form-field>
+    <mat-label>Enter your password</mat-label>
+    <input
+      matInput
+      formControlName="password"
+      [type]="hidepassword ? 'password' : 'text'"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="hidepassword = !hidepassword"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidepassword"
+    >
+      <mat-icon>{{ hidepassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    @if (registrationForm.get("password")?.hasError("noLowerCase")) {
+      <mat-error>Password must include at least one lowercase letter</mat-error>
+    }
+    @if (registrationForm.get("password")?.hasError("noUpperCase")) {
+      <mat-error>Password must include at least one uppercase letter</mat-error>
+    }
+    @if (registrationForm.get("password")?.hasError("noDigit")) {
+      <mat-error>Password must include at least one digit</mat-error>
+    }
+    @if (registrationForm.get("password")?.hasError("noSimbol")) {
+      <mat-error
+        >Password must include at least one special character
+        (&#33;&#64;&#35;&#63;)</mat-error
+      >
+    }
+    @if (registrationForm.get("password")?.hasError("tooShort")) {
+      <mat-error>Password must be at least 8 characters long</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Confirm your password</mat-label>
+    <input
+      matInput
+      formControlName="confirmPassword"
+      [type]="hidepassword ? 'password' : 'text'"
+    />
+    @if (registrationForm.get("confirmPassword")?.hasError("required")) {
+      <mat-error>You need to confirm password</mat-error>
+    }
+
+    @if (registrationForm.errors?.["PasswordNoMatch"]) {
+      <mat-error>Passwords do not match</mat-error>
+    }
+    @if (registrationForm.get("confirmPassword")?.hasError("matching")) {
+      <mat-error>Passwords do not match</mat-error>
+    }
+  </mat-form-field>
+  <!-- name Field -->
+
+  <mat-form-field>
+    <mat-label>First name</mat-label>
+    <input
+      matInput
+      formControlName="firstName"
+      placeholder="Enter your first name"
+    />
+    @if (registrationForm.get("firstName")?.hasError("required")) {
+      <mat-error>Name is required</mat-error>
+    }
+    @if (registrationForm.get("firstName")?.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Last name</mat-label>
+    <input
+      matInput
+      formControlName="lastName"
+      placeholder="Enter your last name"
+    />
+    @if (registrationForm.get("lastName")?.hasError("required")) {
+      <mat-error>Last name is required</mat-error>
+    }
+    @if (registrationForm.get("lastName")?.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      placeholder="Date of Birth"
+      formControlName="dateOfBirth"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    @if (registrationForm.get("dateOfBirth")?.hasError("required")) {
+      <mat-error>Date of Birth is required</mat-error>
+    } @else if (
+      registrationForm.get("dateOfBirth")?.hasError("invalidDateOfBirth")
+    ) {
+      <mat-error>You must be at least 13 years old</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- adress Fields -->
+  <h2>Delivery information</h2>
+
+  <mat-form-field>
+    <input matInput placeholder="Street" formControlName="street" />
+    <mat-error> Street is required </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="City" formControlName="city" />
+    @if (registrationForm.get("city")?.hasError("required")) {
+      <mat-error>City is required</mat-error>
+    } @else if (registrationForm.get("city")?.hasError("pattern")) {
+      <mat-error>Special characters or numbers not allowed</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Country" formControlName="country">
+      @for (country of countries; track country) {
+        <mat-option [value]="country">{{ country }}</mat-option>
+      }
+    </mat-select>
+    @if (registrationForm.get("country")?.hasError("required")) {
+      <mat-error> Country is required</mat-error>
+    } @else if (registrationForm.get("country")?.hasError("invalidCountry")) {
+      <mat-error>Country must be a valid country from the list</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field style="margin-bottom: 25px">
+    <input matInput placeholder="Postal Code" formControlName="postalCode" />
+    @if (registrationForm.get("postalCode")?.hasError("required")) {
+      <mat-error>Postal code is required</mat-error>
+    } @else if (
+      registrationForm.get("postalCode")?.hasError("invalidPostalCode")
+    ) {
+      <mat-error>Wrong format. Ex: 12345, 12345-6789, A1B 2C3</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="buttons-container">
+    <a
+      routerLink="/login"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      mat-button
+      >Login</a
+    >
+
+    <button
+      type="submit"
+      [disabled]="!registrationForm.valid || submitInProcess()"
+      class="button"
+      mat-button
+      (click)="onSubmit()"
+    >
+      Register
+    </button>
+  </div>
+</form>

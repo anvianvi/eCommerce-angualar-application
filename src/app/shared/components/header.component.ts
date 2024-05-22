@@ -1,17 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
+import { AuthService } from '../../auth/services/auth.service';
+import {
+  RouterOutlet,
+  RouterLink,
+  RouterLinkActive,
+  Router,
+} from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  imports: [ProfileStatusBarfoComponent],
+  imports: [
+    MatButton,
+    ProfileStatusBarfoComponent,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+  ],
   selector: 'app-header',
   standalone: true,
   template: `<header class="header-content-wrapper">
     <div class="logo-container">
-      <a routerLink="/" aria-label="Logo">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        aria-label="Logo"
+      >
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>
-    <app-profile-status-bar></app-profile-status-bar>
+    @if (isAuthenticated()) {
+      <app-profile-status-bar></app-profile-status-bar>
+    } @else {
+      <div class="buttons-container">
+        <button mat-button (click)="toLogin()">login</button>
+        <button mat-button (click)="toRegistration()">regestration</button>
+      </div>
+    }
   </header> `,
   styles: [
     `
@@ -23,10 +49,9 @@ import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
       }
 
       .header-content-wrapper {
-        width: min(98vw, 1200px);
+        width: min(90vw, 1200px);
         margin-inline: auto;
         height: 80px;
-        padding-inline: 10px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -46,9 +71,30 @@ import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
         justify-content: center;
         gap: 10px;
       }
+
+      .buttons-container {
+        display: flex;
+        gap: 20px;
+      }
     `,
   ],
 })
 export class HeaderComponent {
-  // component logic
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  toLogin() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+  toRegistration() {
+    this.authService.logout();
+    this.router.navigate(['/registration']);
+  }
 }

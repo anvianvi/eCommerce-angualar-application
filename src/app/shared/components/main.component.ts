@@ -1,36 +1,71 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, OnInit, computed } from '@angular/core';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { AuthService } from '../../auth/services/auth.service';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [MatButton, RouterOutlet, RouterLink, RouterLinkActive],
   standalone: true,
   selector: 'app-main',
-  template: ` here shoud be main????? page
-    <ul>
-      <li>
-        <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page"
-          >go to the main</a
-        >
-      </li>
-      <li>
-        <a
-          routerLink="/registration"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >go to the regestration</a
-        >
-      </li>
-      <li>
-        <a
-          routerLink="/login"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
-          >go to the login</a
-        >
-      </li>
-    </ul>`,
-  styles: ``,
+  template: `
+    <h1>Navigation:</h1>
+    <p>
+      When clicked, you will be redirected to the selected page directly (for
+      login or registration, an automatic loginout will occur)
+    </p>
+    <div class="buttons-container">
+      <button mat-button (click)="toMain()">main</button>
+      <button mat-button (click)="toLogin()">login</button>
+      <button mat-button (click)="toRegistration()">regestration</button>
+    </div>
+  `,
+  styles: `
+    ::ng-deep app-main {
+      margin: 45px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      background: #f2f2f2;
+      max-width: 330px;
+      padding: 15px;
+    }
+
+    .buttons-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+  `,
 })
-export class MainComponent {
-  // component logic
+export class MainComponent implements OnInit {
+  isAuthenticated = computed(() => {
+    return this.authService.isAuthenticated();
+  });
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    if (!this.isAuthenticated()) {
+      this.router.navigate(['/login']);
+    }
+  }
+  toMain() {
+    this.router.navigate(['/']);
+  }
+  toLogin() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+  toRegistration() {
+    this.authService.logout();
+    this.router.navigate(['/registration']);
+  }
 }

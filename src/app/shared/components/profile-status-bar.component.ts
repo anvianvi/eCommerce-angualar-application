@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   imports: [MatButtonModule, MatMenuModule],
@@ -14,10 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
         [matMenuTriggerFor]="beforeMenu"
       />
       <mat-menu #beforeMenu="matMenu">
-        <button mat-menu-item (click)="openProfile()">Profile</button>
-        <button mat-menu-item (click)="logout()" [disabled]="isFetching">
-          Logout
-        </button>
+        <!-- <button mat-menu-item (click)="openProfile()">Profile</button> -->
+        <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
     </div>
   `,
@@ -44,10 +44,10 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class ProfileStatusBarfoComponent {
-  name!: string | null;
-  isFetching: boolean = false;
-
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   openProfile(): void {
     console.log('profile process');
@@ -55,7 +55,7 @@ export class ProfileStatusBarfoComponent {
   }
 
   logout() {
-    this.isFetching = true;
-    console.log('logout process');
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
