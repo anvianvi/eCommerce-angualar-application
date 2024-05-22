@@ -1,0 +1,44 @@
+::ng-deep app-registration-page {
+  margin: 45px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  background: #f2f2f2;
+  max-width: 330px;
+  padding: 15px;
+}
+
+.regestration-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  h2 {
+    margin: 0;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      background: transparent;
+      color: #2f80ed;
+      width: 124px;
+      height: 30px;
+      text-decoration: underline;
+    }
+
+    .button {
+      background: #2f80ed;
+      color: #ffffff;
+      width: 124px;
+      height: 30px;
+      font-size: 12px;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
