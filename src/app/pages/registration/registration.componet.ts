@@ -199,7 +199,7 @@ export class RegistrationComponent implements OnInit {
 
               if (response.customer.id) {
                 this.authService.login(response.customer.id);
-                this.router.navigate(['/']);
+                this.router.navigate(['/main']);
                 this.snackbarService.show(
                   'Successfully registered and logged in',
                   'Close',
