@@ -27,7 +27,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { CustomValidatorsService } from '../../shared/services/custom-validators.service';
 import {
   AuthCustomerService,
-  CustomerRegestrationForm,
+  CustomerRegistrationForm,
 } from '../../shared/services/customer-auth.service';
 import { FormatDataService } from '../../shared/services/format-date.service';
 import { SnackbarService } from '../../shared/services/mat-snackbar.service';
@@ -72,7 +72,7 @@ export class RegistrationComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private customValidators: CustomValidatorsService,
-    private FormatData: FormatDataService,
+    private formatData: FormatDataService,
     private snackbarService: SnackbarService,
     private authCustomerService: AuthCustomerService,
   ) {
@@ -155,19 +155,19 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isAuthenticated()) {
-      this.router.navigate(['/main']);
+      this.router.navigate(['/']);
     }
   }
 
   onSubmit(): void {
-    const countryCode = this.FormatData.getCountyCode(
+    const countryCode = this.formatData.getCountryCode(
       this.registrationForm.get('country')?.value,
     );
-    const formattedDateOfBirth = this.FormatData.getFormatedDateOfBirth(
+    const formattedDateOfBirth = this.formatData.getFormattedDateOfBirth(
       this.registrationForm.get('dateOfBirth')?.value,
     );
 
-    const body: CustomerRegestrationForm = {
+    const body: CustomerRegistrationForm = {
       email: this.registrationForm.value.email,
       password: this.registrationForm.value.password,
       firstName: this.registrationForm.value.firstName,
@@ -187,7 +187,7 @@ export class RegistrationComponent implements OnInit {
     console.log(body);
     this.authCustomerService.createCustomer(body).subscribe({
       next: (response: CustomerResponse) => {
-        console.log('here is sucsses users regestration response');
+        console.log('here is success users registration response');
         console.log(response);
 
         this.authCustomerService

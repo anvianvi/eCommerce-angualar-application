@@ -4,7 +4,7 @@ import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { AuthResponse, CustomerResponse } from '../interfaces';
 import { SnackbarService } from './mat-snackbar.service';
 
-export type CustomerRegestrationForm = {
+export type CustomerRegistrationForm = {
   email: string;
   password: string;
   firstName: string;
@@ -32,7 +32,7 @@ export class AuthCustomerService {
     private snackbarService: SnackbarService,
   ) {}
 
-  createCustomer(body: CustomerRegestrationForm): Observable<CustomerResponse> {
+  createCustomer(body: CustomerRegistrationForm): Observable<CustomerResponse> {
     return this.http
       .post<CustomerResponse>(`${this.apiUrl}/customers`, body)
       .pipe(
