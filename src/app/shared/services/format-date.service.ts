@@ -21,7 +21,7 @@ export class FormatDataService {
     return this.countryCodes[countryname];
   }
 
-  getFormatedDateOfBirth(dateOfBirth: Date) {
+  getFormatedDateOfBirth(dateOfBirth: Date): string {
     return dateOfBirth ? this.formatDate(new Date(dateOfBirth)) : '';
   }
 }

@@ -54,7 +54,7 @@ export class ProfileStatusBarfoComponent {
     // this.router.navigate(['/profile']);
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }

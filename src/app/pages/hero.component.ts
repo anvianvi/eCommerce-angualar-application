@@ -61,7 +61,7 @@ export class HeroComponent implements OnInit {
       this.router.navigate(['/main']);
     }
   }
-  to404() {
+  to404(): void {
     this.router.navigate(['/404notwork']);
   }
 }

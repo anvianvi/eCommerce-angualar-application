@@ -159,7 +159,7 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const countryCode = this.FormatData.getCountyCode(
       this.registrationForm.get('country')?.value,
     );

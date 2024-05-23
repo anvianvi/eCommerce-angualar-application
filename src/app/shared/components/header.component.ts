@@ -89,11 +89,11 @@ export class HeaderComponent {
     private router: Router,
   ) {}
 
-  toLogin() {
+  toLogin(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-  toRegistration() {
+  toRegistration(): void {
     this.authService.logout();
     this.router.navigate(['/registration']);
   }

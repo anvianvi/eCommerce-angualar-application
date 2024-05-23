@@ -62,7 +62,7 @@ async function fetchNewAccessToken(): Promise<AccessTokenResponse> {
   return responseData;
 }
 
-function isAccessTokenExpired() {
+function isAccessTokenExpired(): boolean {
   const currentTime = new Date().getTime();
   const storedExpirationTime = parseInt(
     localStorage.getItem('accessTokenExpirationTime') || '0',
