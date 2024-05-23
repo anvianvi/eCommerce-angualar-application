@@ -120,7 +120,10 @@
   </mat-form-field>
 
   <!-- adress Fields -->
-  <h2>Delivery information</h2>
+  <h2>Billing Address</h2>
+  <mat-checkbox labelPosition="before" formControlName="useSameAddress"
+    >Use same address for shipping
+  </mat-checkbox>
 
   <mat-form-field>
     <input matInput placeholder="Street" formControlName="street" />
@@ -159,6 +162,62 @@
       <mat-error>Wrong format. Ex: 12345, 12345-6789, A1B 2C3</mat-error>
     }
   </mat-form-field>
+
+  @if (!registrationForm.get("useSameAddress")?.value) {
+    <h2>Shipping Address</h2>
+    <mat-form-field>
+      <input matInput placeholder="shippingStreet" formControlName="street" />
+      <mat-error> Street is required </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="shippingCity" formControlName="city" />
+      @if (registrationForm.get("shippingCity")?.hasError("required")) {
+        <mat-error>City is required</mat-error>
+      } @else if (registrationForm.get("shippingCity")?.hasError("pattern")) {
+        <mat-error>Special characters or numbers not allowed</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="shippingCountry" formControlName="country">
+        @for (country of countries; track country) {
+          <mat-option [value]="country">{{ country }}</mat-option>
+        }
+      </mat-select>
+      @if (registrationForm.get("shippingCountry")?.hasError("required")) {
+        <mat-error> Country is required</mat-error>
+      } @else if (
+        registrationForm.get("shippingCountry")?.hasError("invalidCountry")
+      ) {
+        <mat-error>Country must be a valid country from the list</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field style="margin-bottom: 25px">
+      <input
+        matInput
+        placeholder="Postal Code"
+        formControlName="shippingPostalCode"
+      />
+      @if (registrationForm.get("shippingPostalCode")?.hasError("required")) {
+        <mat-error>Postal code is required</mat-error>
+      } @else if (
+        registrationForm
+          .get("shippingPostalCode")
+          ?.hasError("invalidPostalCode")
+      ) {
+        <mat-error>Wrong format. Ex: 12345, 12345-6789, A1B 2C3</mat-error>
+      }
+    </mat-form-field>
+  }
+
+  <mat-checkbox formControlName="setDefaultBilling"
+    >Set as default billing address</mat-checkbox
+  >
+  <mat-checkbox formControlName="setDefaultShipping"
+    >Set as default shipping address</mat-checkbox
+  >
 
   <div class="buttons-container">
     <a

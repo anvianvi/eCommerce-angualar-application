@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import {
   Router,
@@ -40,6 +41,7 @@ import { SnackbarService } from '../../shared/services/mat-snackbar.service';
     MatSelectModule,
     MatDatepickerModule,
     MatSnackBarModule,
+    MatCheckboxModule,
     FormsModule,
     ReactiveFormsModule,
     RouterOutlet,
@@ -53,6 +55,8 @@ import { SnackbarService } from '../../shared/services/mat-snackbar.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+  useSameAddress = false;
+
   isAuthenticated = computed(() => {
     return this.authService.isAuthenticated();
   });
@@ -67,7 +71,7 @@ export class RegistrationComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private CustomValidators: CustomValidatorsService,
+    private customValidators: CustomValidatorsService,
     private FormatData: FormatDataService,
     private snackbarService: SnackbarService,
     private authCustomerService: AuthCustomerService,
@@ -77,7 +81,7 @@ export class RegistrationComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
-          [Validators.required, this.CustomValidators.passwordValidator],
+          [Validators.required, this.customValidators.passwordValidator],
         ],
         confirmPassword: ['', [Validators.required]],
         firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
@@ -86,7 +90,7 @@ export class RegistrationComponent implements OnInit {
           '',
           [
             Validators.required,
-            this.CustomValidators.dateOfBirthValidator.bind(this),
+            this.customValidators.dateOfBirthValidator.bind(this),
           ],
         ],
         street: ['', [Validators.required]],
@@ -95,23 +99,58 @@ export class RegistrationComponent implements OnInit {
           '',
           [
             Validators.required,
-            this.CustomValidators.countryValidator(this.countries),
+            this.customValidators.countryValidator(this.countries),
           ],
         ],
         postalCode: [
           '',
-          [Validators.required, this.CustomValidators.postalCodeValidator],
+          [Validators.required, this.customValidators.postalCodeValidator],
         ],
+        useSameAddress: [true],
+        shippingStreet: ['', [Validators.required]],
+        shippingCity: [
+          '',
+          [Validators.required, Validators.pattern('[a-zA-Z]+')],
+        ],
+        shippingCountry: [
+          '',
+          [
+            Validators.required,
+            this.customValidators.countryValidator(this.countries),
+          ],
+        ],
+        shippingPostalCode: [
+          '',
+          [Validators.required, this.customValidators.postalCodeValidator],
+        ],
+        setDefaultBilling: [false],
+        setDefaultShipping: [false],
       },
       {
         validators: [
-          this.CustomValidators.confirmPasswordValidator(
+          this.customValidators.confirmPasswordValidator(
             'password',
             'confirmPassword',
           ),
         ],
       },
     );
+
+    this.registrationForm
+      .get('useSameAddress')
+      ?.valueChanges.subscribe((useSameAddress) => {
+        if (useSameAddress) {
+          this.registrationForm.get('shippingStreet')?.disable();
+          this.registrationForm.get('shippingCity')?.disable();
+          this.registrationForm.get('shippingCountry')?.disable();
+          this.registrationForm.get('shippingPostalCode')?.disable();
+        } else {
+          this.registrationForm.get('shippingStreet')?.enable();
+          this.registrationForm.get('shippingCity')?.enable();
+          this.registrationForm.get('shippingCountry')?.enable();
+          this.registrationForm.get('shippingPostalCode')?.enable();
+        }
+      });
   }
 
   ngOnInit(): void {
