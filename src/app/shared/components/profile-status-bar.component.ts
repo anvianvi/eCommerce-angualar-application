@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   imports: [MatButtonModule, MatMenuModule],

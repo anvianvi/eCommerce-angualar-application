@@ -17,9 +17,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerResponse } from '../services/interfaces';
-import { AuthCustomerService } from '../services/customer-auth.service';
-import { AuthService } from '../services/auth.service';
+import { CustomerResponse } from '../shared/interfaces';
+import { AuthService } from '../shared/services/auth.service';
+import { AuthCustomerService } from '../shared/services/customer-auth.service';
 
 @Component({
   imports: [
@@ -164,7 +164,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/main']);
     }
   }
 

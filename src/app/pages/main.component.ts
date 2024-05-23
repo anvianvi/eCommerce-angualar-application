@@ -5,7 +5,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../shared/services/auth.service';
 import { MatButton } from '@angular/material/button';
 
 @Component({
@@ -13,16 +13,12 @@ import { MatButton } from '@angular/material/button';
   standalone: true,
   selector: 'app-main',
   template: `
-    <h1>Navigation:</h1>
+    <h1>This is main screen for logged-in users:</h1>
+    <p>Content will appear here later, but for now it's empty.</p>
     <p>
-      When clicked, you will be redirected to the selected page directly (for
-      login or registration, an automatic loginout will occur)
+      If you need to get to the login or registration page, open the system
+      using the logout button under the profile-icon in the header.
     </p>
-    <div class="buttons-container">
-      <button mat-button (click)="toMain()">main</button>
-      <button mat-button (click)="toLogin()">login</button>
-      <button mat-button (click)="toRegistration()">regestration</button>
-    </div>
   `,
   styles: `
     ::ng-deep app-main {
@@ -54,18 +50,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.isAuthenticated()) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     }
-  }
-  toMain() {
-    this.router.navigate(['/']);
-  }
-  toLogin() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-  toRegistration() {
-    this.authService.logout();
-    this.router.navigate(['/registration']);
   }
 }

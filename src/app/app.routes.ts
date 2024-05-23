@@ -1,13 +1,14 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './shared/components/main.component';
-import { RegistrationComponent } from './auth/components/registration/registration.componet';
-import { NotFoundComponent } from './shared/components/404-page.component';
-import { LoginComponent } from './auth/components/login.componet';
+import { MainComponent } from './pages/main.component';
+import { NotFoundComponent } from './pages/404-page.component';
+import { LoginComponent } from './pages/login.componet';
+import { RegistrationComponent } from './pages/registration/registration.componet';
+import { HeroComponent } from './pages/hero.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: MainComponent,
+    component: HeroComponent,
   },
   {
     path: 'login',
@@ -18,10 +19,10 @@ export const routes: Routes = [
     component: RegistrationComponent,
     // canActivate: [AuthGuard],
   },
-  // {
-  // path: 'catalog',
-  // component: CatalogComponent,
-  // },
+  {
+    path: 'main',
+    component: MainComponent,
+  },
   // {
   // path: 'profile',
   // component: ProfileComponent,

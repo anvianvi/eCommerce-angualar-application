@@ -21,15 +21,15 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { CustomValidatorsService } from '../../services/custom-validators.service';
-import { FormatDataService } from '../../../shared/services/format-date.service';
-import { SnackbarService } from '../../../shared/services/mat-snackbar.service';
+import { CustomerResponse } from '../../shared/interfaces';
+import { AuthService } from '../../shared/services/auth.service';
+import { CustomValidatorsService } from '../../shared/services/custom-validators.service';
 import {
   AuthCustomerService,
   CustomerRegestrationForm,
-} from '../../services/customer-auth.service';
-import { CustomerResponse } from '../../services/interfaces';
-import { AuthService } from '../../services/auth.service';
+} from '../../shared/services/customer-auth.service';
+import { FormatDataService } from '../../shared/services/format-date.service';
+import { SnackbarService } from '../../shared/services/mat-snackbar.service';
 
 @Component({
   imports: [
@@ -116,7 +116,7 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/main']);
     }
   }
 
