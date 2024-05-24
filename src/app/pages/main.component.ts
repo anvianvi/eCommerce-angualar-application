@@ -5,7 +5,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { AuthService } from '../shared/services/auth.service';
+import { AuthService } from '../core/services/auth.service';
 import { MatButton } from '@angular/material/button';
 
 @Component({

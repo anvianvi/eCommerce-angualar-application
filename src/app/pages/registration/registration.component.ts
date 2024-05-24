@@ -22,15 +22,15 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { CustomerResponse } from '../../shared/interfaces';
-import { AuthService } from '../../shared/services/auth.service';
-import { CustomValidatorsService } from '../../shared/services/custom-validators.service';
+import { CustomerResponse } from '../../core/interfaces/interfaces';
+import { AuthService } from '../../core/services/auth.service';
+import { CustomValidatorsService } from '../../core/services/custom-validators.service';
 import {
   AuthCustomerService,
   CustomerRegistrationForm,
-} from '../../shared/services/customer-auth.service';
-import { FormatDataService } from '../../shared/services/format-date.service';
-import { SnackbarService } from '../../shared/services/mat-snackbar.service';
+} from '../../core/services/customer-auth.service';
+import { FormatDataService } from '../../core/services/format-date.service';
+import { SnackbarService } from '../../core/services/mat-snackbar.service';
 
 @Component({
   imports: [
@@ -78,6 +78,10 @@ export class RegistrationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/']);
+    }
+
     this.registrationForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -153,10 +157,6 @@ export class RegistrationComponent implements OnInit {
           this.registrationForm.get('shippingPostalCode')?.enable();
         }
       });
-
-    if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
-    }
   }
 
   onSubmit(): void {

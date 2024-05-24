@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../core/services/auth.service';
 import {
   RouterOutlet,
   RouterLink,

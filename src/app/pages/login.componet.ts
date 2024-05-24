@@ -17,9 +17,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerResponse } from '../shared/interfaces';
-import { AuthService } from '../shared/services/auth.service';
-import { AuthCustomerService } from '../shared/services/customer-auth.service';
+import { CustomerResponse } from '../core/interfaces/interfaces';
+import { AuthService } from '../core/services/auth.service';
+import { AuthCustomerService } from '../core/services/customer-auth.service';
 
 @Component({
   imports: [
