@@ -146,7 +146,7 @@ export class LoginComponent implements OnInit {
   isAuthenticated = computed(() => {
     return this.authService.isAuthenticated();
   });
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
@@ -155,14 +155,14 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private authCustomerService: AuthCustomerService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
-  }
 
-  ngOnInit(): void {
     if (this.isAuthenticated()) {
       this.router.navigate(['/main']);
     }

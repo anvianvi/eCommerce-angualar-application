@@ -61,7 +61,7 @@ export class RegistrationComponent implements OnInit {
     return this.authService.isAuthenticated();
   });
 
-  registrationForm: FormGroup;
+  registrationForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
@@ -75,7 +75,9 @@ export class RegistrationComponent implements OnInit {
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
     private authCustomerService: AuthCustomerService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.registrationForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -151,9 +153,7 @@ export class RegistrationComponent implements OnInit {
           this.registrationForm.get('shippingPostalCode')?.enable();
         }
       });
-  }
 
-  ngOnInit(): void {
     if (this.isAuthenticated()) {
       this.router.navigate(['/']);
     }
