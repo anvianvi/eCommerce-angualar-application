@@ -17,9 +17,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerResponse } from '../services/interfaces';
-import { AuthCustomerService } from '../services/customer-auth.service';
-import { AuthService } from '../services/auth.service';
+import { CustomerResponse } from '../core/interfaces/interfaces';
+import { AuthService } from '../core/services/auth.service';
+import { AuthCustomerService } from '../core/services/customer-auth.service';
 
 @Component({
   imports: [
@@ -146,7 +146,7 @@ export class LoginComponent implements OnInit {
   isAuthenticated = computed(() => {
     return this.authService.isAuthenticated();
   });
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
@@ -155,20 +155,20 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private authCustomerService: AuthCustomerService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
-  }
 
-  ngOnInit(): void {
     if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/main']);
     }
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 

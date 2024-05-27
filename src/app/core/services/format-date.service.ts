@@ -17,11 +17,11 @@ export class FormatDataService {
     return `${year}-${month}-${day}`;
   }
 
-  getCountyCode(countryname: string): string {
+  getCountryCode(countryname: string): string {
     return this.countryCodes[countryname];
   }
 
-  getFormatedDateOfBirth(dateOfBirth: Date) {
+  getFormattedDateOfBirth(dateOfBirth: Date): string {
     return dateOfBirth ? this.formatDate(new Date(dateOfBirth)) : '';
   }
 }

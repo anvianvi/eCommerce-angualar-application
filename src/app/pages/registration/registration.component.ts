@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import {
   Router,
@@ -21,15 +22,15 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { CustomValidatorsService } from '../../services/custom-validators.service';
-import { FormatDataService } from '../../../shared/services/format-date.service';
-import { SnackbarService } from '../../../shared/services/mat-snackbar.service';
+import { CustomerResponse } from '../../core/interfaces/interfaces';
+import { AuthService } from '../../core/services/auth.service';
+import { CustomValidatorsService } from '../../core/services/custom-validators.service';
 import {
   AuthCustomerService,
-  CustomerRegestrationForm,
-} from '../../services/customer-auth.service';
-import { CustomerResponse } from '../../services/interfaces';
-import { AuthService } from '../../services/auth.service';
+  CustomerRegistrationForm,
+} from '../../core/services/customer-auth.service';
+import { FormatDataService } from '../../core/services/format-date.service';
+import { SnackbarService } from '../../core/services/mat-snackbar.service';
 
 @Component({
   imports: [
@@ -40,6 +41,7 @@ import { AuthService } from '../../services/auth.service';
     MatSelectModule,
     MatDatepickerModule,
     MatSnackBarModule,
+    MatCheckboxModule,
     FormsModule,
     ReactiveFormsModule,
     RouterOutlet,
@@ -53,11 +55,13 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+  useSameAddress = false;
+
   isAuthenticated = computed(() => {
     return this.authService.isAuthenticated();
   });
 
-  registrationForm: FormGroup;
+  registrationForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
@@ -67,17 +71,23 @@ export class RegistrationComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private CustomValidators: CustomValidatorsService,
-    private FormatData: FormatDataService,
+    private customValidators: CustomValidatorsService,
+    private formatData: FormatDataService,
     private snackbarService: SnackbarService,
     private authCustomerService: AuthCustomerService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/']);
+    }
+
     this.registrationForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
-          [Validators.required, this.CustomValidators.passwordValidator],
+          [Validators.required, this.customValidators.passwordValidator],
         ],
         confirmPassword: ['', [Validators.required]],
         firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
@@ -86,7 +96,7 @@ export class RegistrationComponent implements OnInit {
           '',
           [
             Validators.required,
-            this.CustomValidators.dateOfBirthValidator.bind(this),
+            this.customValidators.dateOfBirthValidator.bind(this),
           ],
         ],
         street: ['', [Validators.required]],
@@ -95,40 +105,69 @@ export class RegistrationComponent implements OnInit {
           '',
           [
             Validators.required,
-            this.CustomValidators.countryValidator(this.countries),
+            this.customValidators.countryValidator(this.countries),
           ],
         ],
         postalCode: [
           '',
-          [Validators.required, this.CustomValidators.postalCodeValidator],
+          [Validators.required, this.customValidators.postalCodeValidator],
         ],
+        useSameAddress: [true],
+        shippingStreet: ['', [Validators.required]],
+        shippingCity: [
+          '',
+          [Validators.required, Validators.pattern('[a-zA-Z]+')],
+        ],
+        shippingCountry: [
+          '',
+          [
+            Validators.required,
+            this.customValidators.countryValidator(this.countries),
+          ],
+        ],
+        shippingPostalCode: [
+          '',
+          [Validators.required, this.customValidators.postalCodeValidator],
+        ],
+        setDefaultBilling: [false],
+        setDefaultShipping: [false],
       },
       {
         validators: [
-          this.CustomValidators.confirmPasswordValidator(
+          this.customValidators.confirmPasswordValidator(
             'password',
             'confirmPassword',
           ),
         ],
       },
     );
+
+    this.registrationForm
+      .get('useSameAddress')
+      ?.valueChanges.subscribe((useSameAddress) => {
+        if (useSameAddress) {
+          this.registrationForm.get('shippingStreet')?.disable();
+          this.registrationForm.get('shippingCity')?.disable();
+          this.registrationForm.get('shippingCountry')?.disable();
+          this.registrationForm.get('shippingPostalCode')?.disable();
+        } else {
+          this.registrationForm.get('shippingStreet')?.enable();
+          this.registrationForm.get('shippingCity')?.enable();
+          this.registrationForm.get('shippingCountry')?.enable();
+          this.registrationForm.get('shippingPostalCode')?.enable();
+        }
+      });
   }
 
-  ngOnInit(): void {
-    if (this.isAuthenticated()) {
-      this.router.navigate(['/']);
-    }
-  }
-
-  onSubmit() {
-    const countryCode = this.FormatData.getCountyCode(
+  onSubmit(): void {
+    const countryCode = this.formatData.getCountryCode(
       this.registrationForm.get('country')?.value,
     );
-    const formattedDateOfBirth = this.FormatData.getFormatedDateOfBirth(
+    const formattedDateOfBirth = this.formatData.getFormattedDateOfBirth(
       this.registrationForm.get('dateOfBirth')?.value,
     );
 
-    const body: CustomerRegestrationForm = {
+    const body: CustomerRegistrationForm = {
       email: this.registrationForm.value.email,
       password: this.registrationForm.value.password,
       firstName: this.registrationForm.value.firstName,
@@ -148,7 +187,7 @@ export class RegistrationComponent implements OnInit {
     console.log(body);
     this.authCustomerService.createCustomer(body).subscribe({
       next: (response: CustomerResponse) => {
-        console.log('here is sucsses users regestration response');
+        console.log('here is success users registration response');
         console.log(response);
 
         this.authCustomerService
@@ -160,7 +199,7 @@ export class RegistrationComponent implements OnInit {
 
               if (response.customer.id) {
                 this.authService.login(response.customer.id);
-                this.router.navigate(['/']);
+                this.router.navigate(['/main']);
                 this.snackbarService.show(
                   'Successfully registered and logged in',
                   'Close',

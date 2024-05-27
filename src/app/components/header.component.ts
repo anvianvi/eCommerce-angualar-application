@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../core/services/auth.service';
 import {
   RouterOutlet,
   RouterLink,
@@ -89,11 +89,11 @@ export class HeaderComponent {
     private router: Router,
   ) {}
 
-  toLogin() {
+  toLogin(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-  toRegistration() {
+  toRegistration(): void {
     this.authService.logout();
     this.router.navigate(['/registration']);
   }

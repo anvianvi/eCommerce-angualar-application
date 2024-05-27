@@ -95,9 +95,7 @@ export class CustomValidatorsService {
     };
   }
 
-  dateOfBirthValidator(
-    control: FormControl,
-  ): { [key: string]: boolean } | null {
+  dateOfBirthValidator(control: FormControl): Record<string, boolean> | null {
     const minDateFor13ears = new Date();
     minDateFor13ears.setFullYear(minDateFor13ears.getFullYear() - 13);
 

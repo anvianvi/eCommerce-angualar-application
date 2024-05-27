@@ -5,23 +5,27 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { AuthService } from '../../auth/services/auth.service';
 import { MatButton } from '@angular/material/button';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   imports: [MatButton, RouterOutlet, RouterLink, RouterLinkActive],
   standalone: true,
-  selector: 'app-main',
+  selector: 'app-hero',
   template: `
-    <h1>Navigation:</h1>
+    <h1>Hello, this is the entrance page of the application</h1>
     <p>
-      When clicked, you will be redirected to the selected page directly (for
-      login or registration, an automatic loginout will occur)
+      Later it will be filled with content, below are links to make it easier to
+      check during the cross-checks review
     </p>
+    <ul>
+      <li>
+        404 page - you can achieve it manually, buy enter invalid path, ex:
+        ../logiasdas
+      </li>
+    </ul>
     <div class="buttons-container">
-      <button mat-button (click)="toMain()">main</button>
-      <button mat-button (click)="toLogin()">login</button>
-      <button mat-button (click)="toRegistration()">regestration</button>
+      <button mat-button (click)="to404()">to404</button>
     </div>
   `,
   styles: `
@@ -42,7 +46,7 @@ import { MatButton } from '@angular/material/button';
     }
   `,
 })
-export class MainComponent implements OnInit {
+export class HeroComponent implements OnInit {
   isAuthenticated = computed(() => {
     return this.authService.isAuthenticated();
   });
@@ -53,19 +57,11 @@ export class MainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!this.isAuthenticated()) {
-      this.router.navigate(['/login']);
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/main']);
     }
   }
-  toMain() {
-    this.router.navigate(['/']);
-  }
-  toLogin() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-  toRegistration() {
-    this.authService.logout();
-    this.router.navigate(['/registration']);
+  to404(): void {
+    this.router.navigate(['/404notwork']);
   }
 }
