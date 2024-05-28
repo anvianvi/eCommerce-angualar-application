@@ -29,9 +29,6 @@ export type CustomerRegistrationForm = {
   providedIn: 'root',
 })
 export class AuthCustomerService {
-  // private apiUrl =
-  //   'https://api.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905';
-  // https://auth.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905
   private apiUrl = `${environment.host}/${environment.project_key}`;
 
   constructor(
@@ -77,7 +74,7 @@ export class AuthCustomerService {
         tap((response) => {
           console.log('here is response from customerLogin');
           console.log(response);
-          // sessionStorage.setItem('auth_token', response.access_token); // Store the token
+          sessionStorage.setItem('userId', response.customer.id); // Store the token
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

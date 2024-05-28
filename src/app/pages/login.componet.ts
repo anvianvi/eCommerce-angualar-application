@@ -17,7 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CustomerResponse } from '../core/interfaces/interfaces';
+// import { CustomerResponse } from '../core/interfaces/interfaces';
 import { AuthService } from '../core/services/auth.service';
 import { AuthCustomerService } from '../core/services/customer-auth.service';
 
@@ -172,21 +172,18 @@ export class LoginComponent implements OnInit {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 
-    console.log(email, password);
+    this.authService.getCustomersAccessToken(email, password);
 
-    this.authCustomerService.customerLogin(email, password).subscribe({
-      next: (response: CustomerResponse) => {
-        console.log('here is onSubmit login form response response');
-        console.log(response);
-        console.log(response.customer.id);
-        if (response.customer.id) {
-          this.authService.login(response.customer.id);
-          this.router.navigate(['/']);
-        }
-      },
-      complete: () => {
-        console.log('Request complete');
-      },
-    });
+    // this.authCustomerService.customerLogin(email, password).subscribe({
+    //   next: (response: CustomerResponse) => {
+    //     if (response.customer.id) {
+    //       this.authService.login(response.customer.id);
+    //       this.router.navigate(['/']);
+    //     }
+    //   },
+    //   complete: () => {
+    //     console.log('Request complete');
+    //   },
+    // });
   }
 }
