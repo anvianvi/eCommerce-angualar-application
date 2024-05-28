@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environment/environment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { SnackbarService } from '../mat-snackbar.service';
 
 type ApplicationAccessTokenResponse = {
   access_token: string;
@@ -20,12 +23,17 @@ type CustomerAccessTokenResponse = {
   providedIn: 'root',
 })
 export class ObtainAccessTokenService {
-  async getApplicationAccessToken(): Promise<void> {
+  constructor(
+    private http: HttpClient,
+    private snackbarService: SnackbarService,
+  ) {}
+
+  getApplicationAccessToken(): void {
     const accessTokenExpired = this.isAccessTokenExpired(
       'AppTokenExpirationTime',
     );
     if (accessTokenExpired) {
-      await this.fetchAppAccessToken();
+      this.fetchAppAccessToken();
     }
   }
 
@@ -37,84 +45,91 @@ export class ObtainAccessTokenService {
       'CustomerTokenExpirationTime',
     );
     if (accessTokenExpired) {
-      await this.fetchCustomersAccessToken(username, password);
+      this.fetchCustomersAccessToken(username, password).subscribe({
+        next: () => {
+          this.snackbarService.show(
+            'Customer token fetched successfully',
+            'Ok',
+            2000,
+          );
+        },
+        error: (err) => {
+          this.snackbarService.show(
+            `Failed to fetch Customer AccessToken, ${err}`,
+            'Ok',
+            2000,
+          );
+        },
+      });
     }
   }
 
-  async fetchAppAccessToken(): Promise<ApplicationAccessTokenResponse> {
-    const myHeaders = new Headers();
-    myHeaders.append(
-      'Authorization',
-      `Basic ${btoa(`${environment.client_id}:${environment.client_secret}`)}`,
-    );
+  fetchAppAccessToken(): void {
+    const headers = new HttpHeaders({
+      Authorization: `Basic ${btoa(`${environment.client_id}:${environment.client_secret}`)}`,
+    });
 
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: '',
-      redirect: 'follow' as RequestRedirect,
-    };
-
-    const response = await fetch(
-      `${environment.auth_url}/oauth/token?grant_type=client_credentials`,
-      requestOptions,
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch new App AccessToken');
-    }
-
-    const responseData: ApplicationAccessTokenResponse = await response.json();
-
-    localStorage.setItem('AppAccessToken', responseData.access_token);
-    localStorage.setItem(
-      'AppTokenExpirationTime',
-      (Date.now() + responseData.expires_in * 1000).toString(),
-    );
-
-    return responseData;
+    this.http
+      .post<ApplicationAccessTokenResponse>(
+        `${environment.auth_url}/oauth/token?grant_type=client_credentials`,
+        {},
+        { headers },
+      )
+      .pipe(
+        tap((responseData) => {
+          localStorage.setItem('AppAccessToken', responseData.access_token);
+          localStorage.setItem(
+            'AppTokenExpirationTime',
+            (Date.now() + responseData.expires_in * 1000).toString(),
+          );
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.snackbarService.show('app token received', 'Ok', 2000);
+        },
+        error: (err) => {
+          this.snackbarService.show(
+            `Failed to fetch AppAccessToken, ${err}`,
+            'Ok',
+            2000,
+          );
+        },
+      });
   }
 
-  async fetchCustomersAccessToken(
+  fetchCustomersAccessToken(
     username: string,
     password: string,
-  ): Promise<CustomerAccessTokenResponse> {
-    const myHeaders = new Headers();
-    myHeaders.append(
-      'Authorization',
-      `Basic ${btoa(`${environment.client_id}:${environment.client_secret}`)}`,
-    );
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+  ): Observable<CustomerAccessTokenResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Basic ${btoa(`${environment.client_id}:${environment.client_secret}`)}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
 
-    const body = new URLSearchParams();
-    body.set('grant_type', 'password');
-    body.set('username', username);
-    body.set('password', password);
+    const body = new HttpParams()
+      .set('grant_type', 'password')
+      .set('username', username)
+      .set('password', password);
 
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: body.toString(),
-      redirect: 'follow' as RequestRedirect,
-    };
-
-    const response = await fetch(
-      `${environment.auth_url}/oauth/${environment.project_key}/customers/token`,
-      requestOptions,
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const responseData: CustomerAccessTokenResponse = await response.json();
-
-    localStorage.setItem('CustomerAccessToken', responseData.access_token);
-    localStorage.setItem(
-      'CustomerTokenExpirationTime',
-      (Date.now() + responseData.expires_in * 1000).toString(),
-    );
-
-    return responseData;
+    return this.http
+      .post<CustomerAccessTokenResponse>(
+        `${environment.auth_url}/oauth/${environment.project_key}/customers/token`,
+        body,
+        { headers },
+      )
+      .pipe(
+        tap((responseData) => {
+          localStorage.setItem(
+            'CustomerAccessToken',
+            responseData.access_token,
+          );
+          localStorage.setItem(
+            'CustomerTokenExpirationTime',
+            (Date.now() + responseData.expires_in * 1000).toString(),
+          );
+        }),
+      );
   }
 
   isAccessTokenExpired(tokenExpirationTime: string): boolean {

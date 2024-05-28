@@ -21,11 +21,14 @@ export class AuthenticationService {
 
   async login(email: string, password: string): Promise<void> {
     await this.obtainAccessTokenService.getCustomerAccessToken(email, password);
+
     this.isAuthenticated.set(true);
   }
 
   logout(): void {
-    localStorage.clear();
+    localStorage.removeItem('userId');
+    localStorage.removeItem('CustomerAccessToken');
+    localStorage.removeItem('CustomerTokenExpirationTime');
     this.isAuthenticated.set(false);
     this.router.navigate(['/']);
   }
