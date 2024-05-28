@@ -1,8 +1,13 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { AuthResponse, CustomerResponse } from '../interfaces/interfaces';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { CustomerResponse } from '../interfaces/interfaces';
 import { SnackbarService } from './mat-snackbar.service';
+import { environment } from '../../environment/environment';
 
 export type CustomerRegistrationForm = {
   email: string;
@@ -24,8 +29,10 @@ export type CustomerRegistrationForm = {
   providedIn: 'root',
 })
 export class AuthCustomerService {
-  private apiUrl =
-    'https://api.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905';
+  // private apiUrl =
+  //   'https://api.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905';
+  // https://auth.europe-west1.gcp.commercetools.com/ecommerce-application-rsschool-1905
+  private apiUrl = `${environment.host}/${environment.project_key}`;
 
   constructor(
     private http: HttpClient,
@@ -33,26 +40,39 @@ export class AuthCustomerService {
   ) {}
 
   createCustomer(body: CustomerRegistrationForm): Observable<CustomerResponse> {
+    const accessToken = localStorage.getItem('accessToken');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    });
+
     return this.http
-      .post<CustomerResponse>(`${this.apiUrl}/customers`, body)
+      .post<CustomerResponse>(`${this.apiUrl}/customers`, body, { headers })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            return this.http.post<CustomerResponse>(
-              `${this.apiUrl}/customers`,
-              body,
-            );
-          } else {
-            this.snackbarService.show(error.error.message, 'Close', 3000);
-            return throwError(() => new Error(error.error.message));
-          }
+          this.snackbarService.show(error.error.message, 'Close', 3000);
+          return throwError(() => new Error(error.error.message));
         }),
       );
   }
 
   customerLogin(email: string, password: string): Observable<CustomerResponse> {
+    console.log(this.apiUrl);
+
+    const accessToken = localStorage.getItem('accessToken');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    });
+
     return this.http
-      .post<CustomerResponse>(`${this.apiUrl}/login`, { email, password })
+      .post<CustomerResponse>(
+        `${this.apiUrl}/login`,
+        { email, password },
+        { headers },
+      )
       .pipe(
         tap((response) => {
           console.log('here is response from customerLogin');
@@ -60,45 +80,8 @@ export class AuthCustomerService {
           // sessionStorage.setItem('auth_token', response.access_token); // Store the token
         }),
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            return this.http.post<CustomerResponse>(`${this.apiUrl}/login`, {
-              email,
-              password,
-            });
-          } else {
-            this.snackbarService.show(error.error.message, 'Close', 3000);
-            return throwError(() => new Error(error.error.message));
-          }
-        }),
-      );
-  }
-
-  tokenForAnanimus(): Observable<AuthResponse> {
-    // const myHeaders = new HttpHeaders({
-    //   'Content-Type': 'application/x-www-form-urlencoded',
-    //   // Add any additional headers if needed
-    // });
-
-    const body = new URLSearchParams({
-      grant_type: 'client_credentials',
-      // Add any additional body parameters if needed
-    }).toString();
-
-    return this.http
-      .post<AuthResponse>(
-        `https://auth.europe-west1.gcp.commercetools.com/oauth/ecommerce-application-rsschool-1905/anonymous/token?grant_type=client_credentials`,
-        body,
-      )
-      .pipe(
-        map((response: AuthResponse) => response),
-        tap((response: AuthResponse) => {
-          console.log('Here is the access_token response:');
-          console.log(response);
-          // sessionStorage.setItem('auth_token', response.access_token); // Store the token
-        }),
-        catchError((error) => {
-          console.error('Error during authentication', error);
-          return throwError(() => new Error('Error during authentication'));
+          this.snackbarService.show(error.error.message, 'Close', 3000);
+          return throwError(() => new Error(error.error.message));
         }),
       );
   }
