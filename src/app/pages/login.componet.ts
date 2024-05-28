@@ -17,9 +17,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-// import { CustomerResponse } from '../core/interfaces/interfaces';
-import { AuthService } from '../core/services/auth.service';
-import { AuthCustomerService } from '../core/services/customer-auth.service';
+import { AuthenticationService } from '../core/services/authentication.service';
+import { CustomerAuthService } from '../core/services/api/customer-auth.service';
+import { CustomerResponse } from '../core/interfaces/interfaces';
 
 @Component({
   imports: [
@@ -144,17 +144,17 @@ import { AuthCustomerService } from '../core/services/customer-auth.service';
 })
 export class LoginComponent implements OnInit {
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
   loginForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-    private authCustomerService: AuthCustomerService,
+    private customerAuthService: CustomerAuthService,
   ) {}
 
   ngOnInit(): void {
@@ -172,18 +172,13 @@ export class LoginComponent implements OnInit {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 
-    this.authService.getCustomersAccessToken(email, password);
-
-    // this.authCustomerService.customerLogin(email, password).subscribe({
-    //   next: (response: CustomerResponse) => {
-    //     if (response.customer.id) {
-    //       this.authService.login(response.customer.id);
-    //       this.router.navigate(['/']);
-    //     }
-    //   },
-    //   complete: () => {
-    //     console.log('Request complete');
-    //   },
-    // });
+    this.customerAuthService.customerLogin(email, password).subscribe({
+      next: async (response: CustomerResponse) => {
+        if (response.customer.id) {
+          await this.authenticationService.login(email, password);
+          this.router.navigate(['/']);
+        }
+      },
+    });
   }
 }

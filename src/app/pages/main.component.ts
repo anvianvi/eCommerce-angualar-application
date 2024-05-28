@@ -5,7 +5,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
+import { AuthenticationService } from '../core/services/authentication.service';
 import { MatButton } from '@angular/material/button';
 
 @Component({
@@ -40,11 +40,11 @@ import { MatButton } from '@angular/material/button';
 })
 export class MainComponent implements OnInit {
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
   ) {}
 

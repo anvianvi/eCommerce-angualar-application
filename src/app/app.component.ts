@@ -11,9 +11,9 @@ import { ObtainAccessTokenService } from './core/services/api/obtain-access-toke
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: ObtainAccessTokenService) {}
+  constructor(private obtainAccessTokenService: ObtainAccessTokenService) {}
 
   ngOnInit(): void {
-    this.authService.configureAccessToken();
+    this.obtainAccessTokenService.getApplicationAccessToken();
   }
 }

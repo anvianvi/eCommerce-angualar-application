@@ -23,12 +23,12 @@ import {
 } from '@angular/router';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { CustomerResponse } from '../../core/interfaces/interfaces';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthenticationService } from '../../core/services/authentication.service';
 import { CustomValidatorsService } from '../../core/services/custom-validators.service';
 import {
-  AuthCustomerService,
+  CustomerAuthService,
   CustomerRegistrationForm,
-} from '../../core/services/customer-auth.service';
+} from '../../core/services/api/customer-auth.service';
 import { FormatDataService } from '../../core/services/format-date.service';
 import { SnackbarService } from '../../core/services/mat-snackbar.service';
 
@@ -58,7 +58,7 @@ export class RegistrationComponent implements OnInit {
   useSameAddress = false;
 
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
 
   registrationForm!: FormGroup;
@@ -68,13 +68,13 @@ export class RegistrationComponent implements OnInit {
   countries = ['Poland', 'United States', 'Canada'];
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
     private customValidators: CustomValidatorsService,
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
-    private authCustomerService: AuthCustomerService,
+    private customerAuthService: CustomerAuthService,
   ) {}
 
   ngOnInit(): void {
@@ -185,20 +185,20 @@ export class RegistrationComponent implements OnInit {
 
     console.log('submit triggered');
     console.log(body);
-    this.authCustomerService.createCustomer(body).subscribe({
+    this.customerAuthService.createCustomer(body).subscribe({
       next: (response: CustomerResponse) => {
         console.log('here is success users registration response');
         console.log(response);
 
-        this.authCustomerService
+        this.customerAuthService
           .customerLogin(body.email, body.password)
           .subscribe({
-            next: (response: CustomerResponse) => {
+            next: async (response: CustomerResponse) => {
               console.log('here is login response');
               console.log(response);
 
               if (response.customer.id) {
-                this.authService.login(response.customer.id);
+                await this.authenticationService.login(body.email, body.password);
                 this.router.navigate(['/main']);
                 this.snackbarService.show(
                   'Successfully registered and logged in',
