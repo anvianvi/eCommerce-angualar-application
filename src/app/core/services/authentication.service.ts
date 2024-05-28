@@ -7,9 +7,7 @@ import { ObtainAccessTokenService } from './api/obtain-access-token';
 export class AuthenticationService {
   isAuthenticated = signal(false);
 
-  constructor(
-    private obtainAccessTokenService: ObtainAccessTokenService,
-  ) {
+  constructor(private obtainAccessTokenService: ObtainAccessTokenService) {
     const isCustomerTokenExpired =
       this.obtainAccessTokenService.isAccessTokenExpired(
         'CustomerTokenExpirationTime',

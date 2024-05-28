@@ -67,9 +67,7 @@ export class CustomerAuthService {
       )
       .pipe(
         tap((response) => {
-          console.log('here is response from customerLogin');
-          console.log(response);
-          sessionStorage.setItem('userId', response.customer.id); // Store the token
+          localStorage.setItem('userId', response.customer.id);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

@@ -38,7 +38,6 @@ export class ObtainAccessTokenService {
     );
     if (accessTokenExpired) {
       await this.fetchCustomersAccessToken(username, password);
-      console.log('token setuped');
     }
   }
 
