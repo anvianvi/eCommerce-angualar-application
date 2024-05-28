@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { ObtainAccessTokenService } from './api/obtain-access-token';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,10 @@ import { ObtainAccessTokenService } from './api/obtain-access-token';
 export class AuthenticationService {
   isAuthenticated = signal(false);
 
-  constructor(private obtainAccessTokenService: ObtainAccessTokenService) {
+  constructor(
+    private router: Router,
+    private obtainAccessTokenService: ObtainAccessTokenService,
+  ) {
     const isCustomerTokenExpired =
       this.obtainAccessTokenService.isAccessTokenExpired(
         'CustomerTokenExpirationTime',
@@ -22,7 +26,7 @@ export class AuthenticationService {
 
   logout(): void {
     localStorage.clear();
-    window.location.reload();
     this.isAuthenticated.set(false);
+    this.router.navigate(['/']);
   }
 }

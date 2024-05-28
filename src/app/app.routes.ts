@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './pages/main.component';
 import { NotFoundComponent } from './pages/404-page.component';
-import { LoginComponent } from './pages/login.componet';
+import { LoginComponent } from './pages/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { HeroComponent } from './pages/hero.component';
 
