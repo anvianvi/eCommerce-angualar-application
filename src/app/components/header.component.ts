@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
-import { AuthService } from '../core/services/auth.service';
+import { AuthenticationService } from '../core/services/authentication.service';
 import {
   RouterOutlet,
   RouterLink,
@@ -81,20 +81,19 @@ import { MatButton } from '@angular/material/button';
 })
 export class HeaderComponent {
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
   ) {}
 
   toLogin(): void {
-    this.authService.logout();
     this.router.navigate(['/login']);
   }
+
   toRegistration(): void {
-    this.authService.logout();
     this.router.navigate(['/registration']);
   }
 }

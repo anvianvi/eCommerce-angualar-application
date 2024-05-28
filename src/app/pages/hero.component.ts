@@ -6,7 +6,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { MatButton } from '@angular/material/button';
-import { AuthService } from '../core/services/auth.service';
+import { AuthenticationService } from '../core/services/authentication.service';
 
 @Component({
   imports: [MatButton, RouterOutlet, RouterLink, RouterLinkActive],
@@ -48,11 +48,11 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class HeroComponent implements OnInit {
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
   ) {}
 

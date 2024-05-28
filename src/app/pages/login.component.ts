@@ -17,9 +17,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { AuthenticationService } from '../core/services/authentication.service';
+import { CustomerAuthService } from '../core/services/api/customer-auth.service';
 import { CustomerResponse } from '../core/interfaces/interfaces';
-import { AuthService } from '../core/services/auth.service';
-import { AuthCustomerService } from '../core/services/customer-auth.service';
 
 @Component({
   imports: [
@@ -144,17 +144,17 @@ import { AuthCustomerService } from '../core/services/customer-auth.service';
 })
 export class LoginComponent implements OnInit {
   isAuthenticated = computed(() => {
-    return this.authService.isAuthenticated();
+    return this.authenticationService.isAuthenticated();
   });
   loginForm!: FormGroup;
   submitInProcess = signal(false);
   hidepassword = true;
 
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
     private fb: FormBuilder,
-    private authCustomerService: AuthCustomerService,
+    private customerAuthService: CustomerAuthService,
   ) {}
 
   ngOnInit(): void {
@@ -168,24 +168,16 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+ onSubmit(): void {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
 
-    console.log(email, password);
-
-    this.authCustomerService.customerLogin(email, password).subscribe({
-      next: (response: CustomerResponse) => {
-        console.log('here is onSubmit login form response response');
-        console.log(response);
-        console.log(response.customer.id);
+    this.customerAuthService.customerLogin(email, password).subscribe({
+      next: async (response: CustomerResponse) => {
         if (response.customer.id) {
-          this.authService.login(response.customer.id);
+          await this.authenticationService.login(email, password);
           this.router.navigate(['/']);
         }
-      },
-      complete: () => {
-        console.log('Request complete');
       },
     });
   }

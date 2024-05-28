@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
+import { AuthenticationService } from '../core/services/authentication.service';
 
 @Component({
   imports: [MatButtonModule, MatMenuModule],
@@ -45,7 +45,7 @@ import { AuthService } from '../core/services/auth.service';
 })
 export class ProfileStatusBarfoComponent {
   constructor(
-    private authService: AuthService,
+    private authenticationService: AuthenticationService,
     private router: Router,
   ) {}
 
@@ -55,7 +55,6 @@ export class ProfileStatusBarfoComponent {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authenticationService.logout();
   }
 }
