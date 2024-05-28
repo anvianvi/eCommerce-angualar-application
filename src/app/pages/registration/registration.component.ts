@@ -112,7 +112,7 @@ export class RegistrationComponent implements OnInit {
           '',
           [Validators.required, this.customValidators.postalCodeValidator],
         ],
-        useSameAddress: [true],
+        useSameAddress: [false],
         shippingStreet: ['', [Validators.required]],
         shippingCity: [
           '',
@@ -183,22 +183,17 @@ export class RegistrationComponent implements OnInit {
       ],
     };
 
-    console.log('submit triggered');
-    console.log(body);
     this.customerAuthService.createCustomer(body).subscribe({
-      next: (response: CustomerResponse) => {
-        console.log('here is success users registration response');
-        console.log(response);
-
+      next: () => {
         this.customerAuthService
           .customerLogin(body.email, body.password)
           .subscribe({
             next: async (response: CustomerResponse) => {
-              console.log('here is login response');
-              console.log(response);
-
               if (response.customer.id) {
-                await this.authenticationService.login(body.email, body.password);
+                await this.authenticationService.login(
+                  body.email,
+                  body.password,
+                );
                 this.router.navigate(['/main']);
                 this.snackbarService.show(
                   'Successfully registered and logged in',
@@ -208,12 +203,6 @@ export class RegistrationComponent implements OnInit {
               }
             },
           });
-      },
-      error: (error: unknown) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Request complete');
       },
     });
   }
