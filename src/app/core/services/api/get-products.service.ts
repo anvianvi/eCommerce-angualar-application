@@ -16,7 +16,7 @@ export class GetProductsService {
   productsInStore = signal<Product[] | []>([]);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken');
+  private accessToken = localStorage.getItem('AppAccessToken') || '';
 
   constructor(
     private http: HttpClient,
@@ -33,9 +33,7 @@ export class GetProductsService {
       .get<queryProductsResponse>(`${this.apiUrl}/products`, { headers })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
           this.productsInStore.set(responseData.results);
-          console.log(this.productsInStore());
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

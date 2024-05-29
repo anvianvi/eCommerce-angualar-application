@@ -9,7 +9,7 @@ import { AuthenticationService } from '../core/services/authentication.service';
 import { MatButton } from '@angular/material/button';
 import { SnackbarService } from '../core/services/mat-snackbar.service';
 import { GetProductsService } from '../core/services/api/get-products.service';
-import { ProductCardComponent } from '../components/product-card.componet';
+import { ProductCardComponent } from '../components/product-card.component';
 
 @Component({
   imports: [

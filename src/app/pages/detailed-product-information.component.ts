@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   selector: 'app-detailed-product-information',
   template: `<div>
-    <h1>Here shoud be page about product id = {{ productId }}</h1>
+    <h1>Here should be page about product id = {{ productId }}</h1>
     <button (click)="goBack()">Back</button>
   </div>`,
   styles: ``,

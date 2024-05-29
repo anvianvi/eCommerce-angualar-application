@@ -4,7 +4,7 @@ import { NotFoundComponent } from './pages/404-page.component';
 import { LoginComponent } from './pages/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { HeroComponent } from './pages/hero.component';
-import { DetailedProductInformationComponent } from './pages/detailed-product-information.componet';
+import { DetailedProductInformationComponent } from './pages/detailed-product-information.component';
 
 export const routes: Routes = [
   {
