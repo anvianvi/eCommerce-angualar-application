@@ -14,17 +14,17 @@ import { Router } from '@angular/router';
           class="photo"
           src="{{ product.masterData.current.masterVariant.images[0].url }}"
           alt="photo of  {{
-            product.masterData.current.name[curretLocation()]
+            product.masterData.current.name[currentLocation()]
           }} "
           loading="lazy"
         />
       </div>
       <div class="text-container">
         <h3 class="h3">
-          {{ product.masterData.current.name[curretLocation()] }}
+          {{ product.masterData.current.name[currentLocation()] }}
         </h3>
         <p class="description">
-          {{ product.masterData.current.description[curretLocation()] }}
+          {{ product.masterData.current.description[currentLocation()] }}
         </p>
       </div>
     </div>
@@ -87,7 +87,7 @@ import { Router } from '@angular/router';
 export class ProductCardComponent {
   @Input() product!: Product;
 
-  curretLocation = computed(() => {
+  currentLocation = computed(() => {
     return this.localSettingsService.currentLocation();
   });
 
