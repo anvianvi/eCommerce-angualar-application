@@ -27,7 +27,7 @@ import { MatButton } from '@angular/material/button';
         ariaCurrentWhenActive="page"
         aria-label="Logo"
       >
-        <img class="logo" src="assets/logo.png" alt="site logo" />
+        <img class="logo" src="assets/logo.svg" alt="site logo" />
       </a>
     </div>
     @if (isAuthenticated()) {
