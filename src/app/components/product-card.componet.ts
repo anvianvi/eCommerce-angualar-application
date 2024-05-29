@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, computed } from '@angular/core';
 import { Product } from '../core/models/products';
+import { LocalSettingsService } from '../core/services/local-settings.service';
 
 @Component({
   imports: [],
@@ -11,14 +12,18 @@ import { Product } from '../core/models/products';
         <img
           class="photo"
           src="{{ product.masterData.current.masterVariant.images[0].url }}"
-          alt="phoppppppppppppppt"
+          alt="photo of  {{
+            product.masterData.current.name[curretLocation()]
+          }} "
           loading="lazy"
         />
       </div>
       <div class="text-container">
-        <h3 class="h3">{{ product.masterData.current.name['en-GB'] }}</h3>
+        <h3 class="h3">
+          {{ product.masterData.current.name[curretLocation()] }}
+        </h3>
         <p class="description">
-          {{ product.masterData.current.description['en-GB'] }}
+          {{ product.masterData.current.description[curretLocation()] }}
         </p>
       </div>
     </div>
@@ -28,7 +33,9 @@ import { Product } from '../core/models/products';
 export class ProductCardComponent {
   @Input() product!: Product;
 
-  onCardClick(): void {
-    console.log('card-clicked');
-  }
+  curretLocation = computed(() => {
+    return this.localSettingsService.currentLocation();
+  });
+
+  constructor(private localSettingsService: LocalSettingsService) {}
 }
