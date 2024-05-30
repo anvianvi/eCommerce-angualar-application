@@ -4,6 +4,7 @@ import { NotFoundComponent } from './pages/404-page.component';
 import { LoginComponent } from './pages/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { DetailedProductInformationComponent } from './pages/detailed-product-information.component';
+import { ProfileComponent } from './pages/profile.component';
 
 export const routes: Routes = [
   {
@@ -18,15 +19,10 @@ export const routes: Routes = [
     path: 'registration',
     component: RegistrationComponent,
   },
-  // {
-  // path: 'profile',
-  // component: ProfileComponent,
-  // },
-  // {
-  // path: 'about',
-  // component: AboutUsComponent,
-  // },
-  // {
+  {
+    path: 'profile',
+    component: ProfileComponent,
+  },
   { path: 'product/:id', component: DetailedProductInformationComponent },
   { path: '', redirectTo: '', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
