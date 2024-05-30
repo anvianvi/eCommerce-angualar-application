@@ -12,10 +12,10 @@ import { Router } from '@angular/router';
       <div class="img-container">
         <img
           class="photo"
-          src="{{ product.masterData.current.masterVariant.images[0].url }}"
-          alt="photo of  {{
-            product.masterData.current.name[currentLocation()]
-          }} "
+          [src]="product.masterData.current.masterVariant.images[0].url"
+          [alt]="
+            'photo of ' + product.masterData.current.name[currentLocation()]
+          "
           loading="lazy"
         />
       </div>
