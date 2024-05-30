@@ -164,7 +164,7 @@ export class LoginComponent implements OnInit {
     });
 
     if (this.isAuthenticated()) {
-      this.router.navigate(['/main']);
+      this.router.navigate(['/']);
     }
   }
 

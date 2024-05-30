@@ -1,15 +1,14 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './pages/main.component';
+import { CatalogComponent } from './pages/catalog.component';
 import { NotFoundComponent } from './pages/404-page.component';
 import { LoginComponent } from './pages/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
-import { HeroComponent } from './pages/hero.component';
 import { DetailedProductInformationComponent } from './pages/detailed-product-information.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HeroComponent,
+    component: CatalogComponent,
   },
   {
     path: 'login',
@@ -18,11 +17,6 @@ export const routes: Routes = [
   {
     path: 'registration',
     component: RegistrationComponent,
-    // canActivate: [AuthGuard],
-  },
-  {
-    path: 'main',
-    component: MainComponent,
   },
   // {
   // path: 'profile',
