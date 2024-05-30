@@ -33,8 +33,10 @@ import { Router } from '@angular/router';
     .product-card {
       box-sizing: border-box;
       border-radius: 40px;
-      border: 1px solid #e1d4c9;
+      border: 2px solid #e1d4c9;
       cursor: pointer;
+      transition: box-shadow 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
       .img-container {
         overflow: hidden;
@@ -49,6 +51,12 @@ import { Router } from '@angular/router';
           transition: transform 1.5s ease;
           width: 100%;
         }
+      }
+
+      &:hover {
+        background: #e1d4c9;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        border: 2px solid #b0907a;
       }
 
       &:hover .photo {

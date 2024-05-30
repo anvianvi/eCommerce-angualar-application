@@ -12,7 +12,7 @@ import { AuthenticationService } from '../core/services/authentication.service';
     <div class="login-info-container">
       <img
         src="assets/login.svg"
-        alt="icon of logined account"
+        alt="icon of logged-in account"
         [matMenuTriggerFor]="beforeMenu"
       />
       <mat-menu #beforeMenu="matMenu">
