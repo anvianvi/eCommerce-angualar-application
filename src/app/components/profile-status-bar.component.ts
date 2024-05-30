@@ -16,7 +16,7 @@ import { AuthenticationService } from '../core/services/authentication.service';
         [matMenuTriggerFor]="beforeMenu"
       />
       <mat-menu #beforeMenu="matMenu">
-        <!-- <button mat-menu-item (click)="openProfile()">Profile</button> -->
+        <button mat-menu-item (click)="openProfile()">Profile</button>
         <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
     </div>
@@ -50,8 +50,7 @@ export class ProfileStatusBarfoComponent {
   ) {}
 
   openProfile(): void {
-    console.log('profile process');
-    // this.router.navigate(['/profile']);
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {

@@ -20,7 +20,7 @@ import { ProductCardComponent } from '../components/product-card.component';
     ProductCardComponent,
   ],
   standalone: true,
-  selector: 'app-main',
+  selector: 'app-catalog-page',
   template: `
     <div class="products-list">
       @for (product of products(); track $index) {
@@ -41,7 +41,7 @@ import { ProductCardComponent } from '../components/product-card.component';
     }
   `,
 })
-export class MainComponent implements OnInit {
+export class CatalogComponent implements OnInit {
   isAuthenticated = computed(() => {
     return this.authenticationService.isAuthenticated();
   });
