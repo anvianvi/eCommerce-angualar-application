@@ -50,6 +50,7 @@ export class ProfileStatusBarfoComponent {
   ) {}
 
   openProfile(): void {
+    console.log('hello');
     this.router.navigate(['/profile']);
   }
 
