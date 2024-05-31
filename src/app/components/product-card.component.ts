@@ -2,7 +2,7 @@ import { Component, Input, computed } from '@angular/core';
 import { Product } from '../core/models/products';
 import { LocalSettingsService } from '../core/services/local-settings.service';
 import { Router } from '@angular/router';
-import { ProductPriceBarfoComponent } from './price-block.component';
+import { ProductPriceBarComponent } from './price-block.component';
 
 @Component({
   standalone: true,
@@ -96,7 +96,7 @@ import { ProductPriceBarfoComponent } from './price-block.component';
       }
     }
   `,
-  imports: [ProductPriceBarfoComponent],
+  imports: [ProductPriceBarComponent],
 })
 export class ProductCardComponent {
   @Input() product!: Product;

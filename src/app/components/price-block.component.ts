@@ -10,7 +10,7 @@ import { StorageService } from '../core/storage/storage.service';
   template: `
     <div class="price-container">
       @if (isDiscounted()) {
-        <div class="dicsounted-price">
+        <div class="discounted-price">
           {{
             discountedPrice()
               | currencyFormatter
@@ -20,7 +20,7 @@ import { StorageService } from '../core/storage/storage.service';
                     .fractionDigits
           }}
         </div>
-        <div class="original-dicsounted-price">
+        <div class="original-discounted-price">
           <span>{{
             product.masterData.current.masterVariant.prices[0].value.centAmount
               | currencyFormatter
@@ -53,12 +53,12 @@ import { StorageService } from '../core/storage/storage.service';
         flex-direction: column;
         justify-content: center;
       }
-      .dicsounted-price {
+      .discounted-price {
         font-size: 14px;
         color: red;
         font-weight: 500;
       }
-      .original-dicsounted-price {
+      .original-discounted-price {
         font-size: 12px;
 
         :first-child {
@@ -72,7 +72,7 @@ import { StorageService } from '../core/storage/storage.service';
     `,
   ],
 })
-export class ProductPriceBarfoComponent implements OnInit {
+export class ProductPriceBarComponent implements OnInit {
   @Input() product!: Product;
   isDiscounted = signal(false);
   discountedPrice = signal(0);
@@ -85,29 +85,22 @@ export class ProductPriceBarfoComponent implements OnInit {
   constructor(private storageService: StorageService) {}
 
   ngOnInit(): void {
-    if (
-      this.productDiscounts()[0].references[0].id ===
-      this.product.masterData.current.categories[0].id
-    ) {
+    const productCategory = this.product.masterData.current.categories[0]?.id;
+    const productDiscount = this.productDiscounts()[0];
+
+    if (productDiscount.references[0].id === productCategory) {
       this.isDiscounted.set(true);
     }
+
     if (this.productDiscounts()[0].value.type === 'relative') {
-      this.discountedPrice.set(
-        (Number(
-          this.product.masterData.current.masterVariant.prices[0].value
-            .centAmount,
-        ) *
-          (10000 - this.productDiscounts()[0].value.permyriad)) /
-          10000,
+      const price = Number(
+        this.product.masterData.current.masterVariant.prices[0].value
+          .centAmount,
       );
+      const discount = productDiscount.value.permyriad / 100;
 
-      this.discountAmount.set(this.productDiscounts()[0].value.permyriad / 100);
+      this.discountedPrice.set((price * (100 - discount)) / 100);
+      this.discountAmount.set(discount);
     }
-
-    console.log(
-      this.product.masterData.current.masterVariant.prices[0].value.centAmount,
-    );
-    console.log(this.productDiscounts()[0].value.permyriad);
-    console.log(10000 - this.productDiscounts()[0].value.permyriad);
   }
 }
