@@ -6,7 +6,7 @@ import { CustomerInfoService } from '../../core/services/api/customer-info.servi
 import { SnackbarService } from '../../core/services/mat-snackbar.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-// import { Customer } from '../../core/models/customer';
+import { Customer } from '../../core/models/customer';
 
 @Component({
   imports: [MatCardModule, MatButtonModule],
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
   customerId = localStorage.getItem('userId');
   accesstoken = localStorage.getItem('AppAccessToken') || '';
 
-  customerData: any = this.customerInfoService.queryCustomer();
+  customerData: Customer | null = null;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -37,7 +37,19 @@ export class ProfileComponent implements OnInit {
     if (!this.isAuthenticated()) {
       this.router.navigate(['/']);
     }
-    console.log(this.customerData);
+    this.customerInfoService.queryCustomer().subscribe({
+      next: (data) => {
+        this.customerData = data;
+        console.log('Customer data:', this.customerData);
+      },
+      error: (err) => {
+        this.snackbarService.show(
+          `Failed to fetch customer data: ${err}`,
+          'Close',
+          2000,
+        );
+      },
+    });
   }
 
   goBack(): void {

@@ -7,15 +7,15 @@
       </mat-card-header>
       <mat-card-content>
         <p>Name:</p>
-        <p>John</p>
+        <p>{{ customerData?.firstName }}</p>
       </mat-card-content>
       <mat-card-content>
         <p>Surname:</p>
-        <p>Doe</p>
+        <p>{{ customerData?.lastName }}</p>
       </mat-card-content>
       <mat-card-content>
         <p>Date of birth:</p>
-        <p>16.06.1966</p>
+        <p>{{ customerData?.dateOfBirth }}</p>
       </mat-card-content>
       <mat-card-actions>
         <button mat-button>Edit</button>
