@@ -73,14 +73,14 @@ export class CatalogComponent implements OnInit {
     this.getProductsDiscountsService.queryProductsDiscounts().subscribe({
       next: () => {
         this.snackbarService.show(
-          'Customer token fetched successfully',
+          'Products Discounts fetched successfully',
           'Ok',
           2000,
         );
       },
       error: (err) => {
         this.snackbarService.show(
-          `Failed to fetch Customer AccessToken, ${err}`,
+          `Failed to fetch Products Discounts, ${err}`,
           'Ok',
           2000,
         );
