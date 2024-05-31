@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CurrencyFormatterPipe implements PipeTransform {
   transform(
-    centAmount: string,
+    centAmount: number,
     currencyCode: string,
     fractionDigits: string,
   ): string {

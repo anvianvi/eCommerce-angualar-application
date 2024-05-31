@@ -28,7 +28,7 @@ export type Product = {
           value: {
             type: string;
             currencyCode: string;
-            centAmount: string;
+            centAmount: number;
             fractionDigits: string;
           };
           country: string;

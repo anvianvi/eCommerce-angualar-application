@@ -8,7 +8,7 @@ import { ProductPriceBarfoComponent } from './price-block.component';
   standalone: true,
   selector: 'app-product-card',
   template: `
-    <div class="product-card" role="none" (click)="onClick()">
+    <div class="product-card" role="none" (click)="openDetailedProductPage()">
       <div class="img-container">
         <img
           class="photo"
@@ -47,6 +47,7 @@ import { ProductPriceBarfoComponent } from './price-block.component';
         border-radius: 40px;
         width: 310px;
         height: 260px;
+        margin-bottom: 10px;
 
         .photo {
           transition: transform 1.5s ease;
@@ -109,7 +110,7 @@ export class ProductCardComponent {
     private router: Router,
   ) {}
 
-  onClick(): void {
+  openDetailedProductPage(): void {
     this.router.navigate([`/product/${this.product.id}`]);
   }
 }
