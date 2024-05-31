@@ -2,9 +2,9 @@ import { Component, Input, computed } from '@angular/core';
 import { Product } from '../core/models/products';
 import { LocalSettingsService } from '../core/services/local-settings.service';
 import { Router } from '@angular/router';
+import { ProductPriceBarfoComponent } from './price-block.component';
 
 @Component({
-  imports: [],
   standalone: true,
   selector: 'app-product-card',
   template: `
@@ -16,9 +16,9 @@ import { Router } from '@angular/router';
           [alt]="
             'photo of ' + product.masterData.current.name[currentLocation()]
           "
-          loading="lazy"
         />
       </div>
+      <app-product-price-bar [product]="product"></app-product-price-bar>
       <div class="text-container">
         <h3 class="h3">
           {{ product.masterData.current.name[currentLocation()] }}
@@ -50,7 +50,13 @@ import { Router } from '@angular/router';
         .photo {
           transition: transform 1.5s ease;
           width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
+      }
+
+      &:hover .photo {
+        transform: scale(1.1);
       }
 
       &:hover {
@@ -59,13 +65,9 @@ import { Router } from '@angular/router';
         border: 2px solid #b0907a;
       }
 
-      &:hover .photo {
-        transform: scale(1.1);
-      }
-
       .text-container {
         box-sizing: border-box;
-        padding: 20px;
+        padding: 10px 20px;
         max-width: 310px;
 
         .h3 {
@@ -83,14 +85,10 @@ import { Router } from '@angular/router';
           line-height: 1.2;
           max-height: calc(1.2em * 4);
         }
-        .price {
-          font-size: 24px;
-          font-weight: 600;
-          line-height: 125%;
-        }
       }
     }
   `,
+  imports: [ProductPriceBarfoComponent],
 })
 export class ProductCardComponent {
   @Input() product!: Product;
