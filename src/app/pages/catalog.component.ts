@@ -5,6 +5,7 @@ import { SnackbarService } from '../core/services/mat-snackbar.service';
 import { GetProductsService } from '../core/services/api/get-products.service';
 import { ProductCardComponent } from '../components/product-card.component';
 import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
+import { StorageService } from '../core/storage/storage.service';
 
 @Component({
   imports: [
@@ -39,10 +40,11 @@ import { GetProductsDiscountsService } from '../core/services/api/get-discounts.
 })
 export class CatalogComponent implements OnInit {
   products = computed(() => {
-    return this.getProductsService.productsInStore();
+    return this.storageService.productsInStore();
   });
 
   constructor(
+    private storageService: StorageService,
     private getProductsService: GetProductsService,
     private getProductsDiscountsService: GetProductsDiscountsService,
     private snackbarService: SnackbarService,

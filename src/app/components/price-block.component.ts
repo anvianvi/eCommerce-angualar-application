@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, computed, signal } from '@angular/core';
 import { Product } from '../core/models/products';
 import { CurrencyFormatterPipe } from '../core/pipes/currency-formatter.pipe';
-import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
+import { StorageService } from '../core/storage/storage.service';
 
 @Component({
   imports: [CurrencyFormatterPipe],
@@ -79,12 +79,10 @@ export class ProductPriceBarfoComponent implements OnInit {
   discountAmount = signal(0);
 
   productDiscounts = computed(() => {
-    return this.getProductsDiscountsService.productDiscounts();
+    return this.storageService.productDiscounts();
   });
 
-  constructor(
-    private getProductsDiscountsService: GetProductsDiscountsService,
-  ) {}
+  constructor(private storageService: StorageService) {}
 
   ngOnInit(): void {
     if (

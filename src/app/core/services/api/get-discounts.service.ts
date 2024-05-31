@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SnackbarService } from '../mat-snackbar.service';
 import {
   HttpClient,
@@ -7,20 +7,20 @@ import {
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../../environment/environment';
-import { Discount, queryDiscountsResponse } from '../../models/discounts';
+import { queryDiscountsResponse } from '../../models/discounts';
+import { StorageService } from '../../storage/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetProductsDiscountsService {
-  productDiscounts = signal<Discount[] | []>([]);
-
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
 
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
+    private storageService: StorageService,
   ) {}
 
   queryProductsDiscounts(): Observable<queryDiscountsResponse> {
@@ -35,9 +35,7 @@ export class GetProductsDiscountsService {
       })
       .pipe(
         tap((responseData) => {
-          this.productDiscounts.set(responseData.results);
-          console.log(responseData.results);
-          console.log(responseData);
+          this.storageService.productDiscounts.set(responseData.results);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
