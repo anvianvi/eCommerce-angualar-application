@@ -32,6 +32,7 @@ import { ProductPriceBarfoComponent } from './price-block.component';
   styles: `
     .product-card {
       box-sizing: border-box;
+      padding: 10px 20px;
       border-radius: 40px;
       border: 2px solid #e1d4c9;
       cursor: pointer;
@@ -45,7 +46,7 @@ import { ProductPriceBarfoComponent } from './price-block.component';
         justify-content: center;
         border-radius: 40px;
         width: 310px;
-        height: 310px;
+        height: 260px;
 
         .photo {
           transition: transform 1.5s ease;
@@ -67,7 +68,6 @@ import { ProductPriceBarfoComponent } from './price-block.component';
 
       .text-container {
         box-sizing: border-box;
-        padding: 10px 20px;
         max-width: 310px;
 
         .h3 {
@@ -75,13 +75,20 @@ import { ProductPriceBarfoComponent } from './price-block.component';
           font-weight: 600;
           line-height: 125%;
           margin-bottom: 12px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-line-clamp: 1;
+          line-height: 1.2;
+          max-height: calc(1.2em * 4);
         }
         .description {
           display: -webkit-box;
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
-          -webkit-line-clamp: 4;
+          -webkit-line-clamp: 3;
           line-height: 1.2;
           max-height: calc(1.2em * 4);
         }

@@ -21,7 +21,7 @@ import { CurrencyFormatterPipe } from '../core/pipes/currency-formatter.pipe';
   styles: [
     `
       .full-price {
-        padding: 10px 0 0 20px;
+        padding: 15px 0;
       }
     `,
   ],

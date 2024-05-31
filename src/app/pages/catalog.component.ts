@@ -38,6 +38,7 @@ import { ProductCardComponent } from '../components/product-card.component';
       flex-wrap: wrap;
       gap: 37px;
       margin-bottom: 100px;
+      padding: 20px;
     }
   `,
 })
