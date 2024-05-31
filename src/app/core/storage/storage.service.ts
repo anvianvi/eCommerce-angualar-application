@@ -9,6 +9,5 @@ import { Customer, emptyCustomer } from '../models/customer';
 export class StorageService {
   productsInStore = signal<Product[] | []>([]);
   productDiscounts = signal<Discount[] | []>([]);
-
   CurrentCustomer = signal<Customer>(emptyCustomer);
 }

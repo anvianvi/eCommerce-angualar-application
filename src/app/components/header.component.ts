@@ -37,7 +37,7 @@ import { MatButton } from '@angular/material/button';
         <app-profile-status-bar></app-profile-status-bar>
       } @else {
         <button mat-button (click)="toLogin()">Login</button>
-        <button mat-button (click)="toRegistration()">Regestration</button>
+        <button mat-button (click)="toRegistration()">Registration</button>
       }
     </div>
   </header> `,
