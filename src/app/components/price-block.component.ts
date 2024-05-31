@@ -88,7 +88,7 @@ export class ProductPriceBarComponent implements OnInit {
     const productCategory = this.product.masterData.current.categories[0]?.id;
     const productDiscount = this.productDiscounts()[0];
 
-    if (productDiscount.references[0].id === productCategory) {
+    if (productDiscount.references[0]?.id === productCategory) {
       this.isDiscounted.set(true);
     }
 
