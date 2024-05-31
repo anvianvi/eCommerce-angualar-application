@@ -1,4 +1,19 @@
 .user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+}
+mat-accordion {
+  width: 50vw;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .info-cards {
@@ -21,12 +36,9 @@
     color: white;
   }
 }
-h1 {
-  text-align: center;
-}
-mat-card-header {
-  padding-bottom: 2em;
-}
+
+// All addresses cards
+
 mat-card-content {
   display: flex;
   justify-content: space-between;

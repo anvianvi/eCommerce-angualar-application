@@ -1,50 +1,113 @@
 <div class="user-profile">
   <h1>User Profile</h1>
-  <div class="info-cards">
-    <mat-card class="info-cards_card">
-      <mat-card-header>
-        <mat-card-title>Basic information</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+  <mat-accordion multi>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Basic information </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
         <p>Name:</p>
         <p>{{ customerData?.firstName }}</p>
-      </mat-card-content>
-      <mat-card-content>
+      </div>
+      <div>
         <p>Surname:</p>
         <p>{{ customerData?.lastName }}</p>
-      </mat-card-content>
-      <mat-card-content>
+      </div>
+      <div>
         <p>Date of birth:</p>
         <p>{{ customerData?.dateOfBirth }}</p>
-      </mat-card-content>
-      <mat-card-actions>
+      </div>
+      <mat-action-row>
         <button mat-button>Edit</button>
-      </mat-card-actions>
-    </mat-card>
-    <mat-card class="info-cards_card">
-      <mat-card-header>
-        <mat-card-title>Shipping address</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <mat-expansion-panel [disabled]="!customerData?.defaultShippingAddressId">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Default shipping address </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
         <p>Street:</p>
-        <p>Street 69</p>
-      </mat-card-content>
-      <mat-card-content>
+        <p>{{ defaultShippingAddress?.streetName }}</p>
+      </div>
+      <div>
         <p>City:</p>
-        <p>Gdańsk</p>
-      </mat-card-content>
-      <mat-card-content>
-        <p>Zip code:</p>
-        <p>80180</p>
-      </mat-card-content>
-      <mat-card-content>
+        <p>{{ defaultShippingAddress?.city }}</p>
+      </div>
+      <div>
+        <p>Postal Code:</p>
+        <p>{{ defaultShippingAddress?.postalCode }}</p>
+      </div>
+      <div>
         <p>Country:</p>
-        <p>Poland</p>
-      </mat-card-content>
-      <mat-card-actions>
+        <p>{{ defaultShippingAddress?.country }}</p>
+      </div>
+      <mat-action-row>
         <button mat-button>Edit</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-  <button (click)="goBack()">Back</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <mat-expansion-panel [disabled]="!customerData?.defaultBillingAddressId">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Default billing address </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <p>Street:</p>
+        <p>{{ defaultBillingAddress?.streetName }}</p>
+      </div>
+      <div>
+        <p>City:</p>
+        <p>{{ defaultBillingAddress?.city }}</p>
+      </div>
+      <div>
+        <p>Postal Code:</p>
+        <p>{{ defaultBillingAddress?.postalCode }}</p>
+      </div>
+      <div>
+        <p>Country:</p>
+        <p>{{ defaultBillingAddress?.country }}</p>
+      </div>
+      <mat-action-row>
+        <button mat-button>Edit</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> All addresses </mat-panel-title>
+      </mat-expansion-panel-header>
+      @for (address of customerData?.addresses; track address.id) {
+        <mat-card>
+          @if (customerData?.defaultBillingAddressId) {
+            <mat-card-header>
+              <mat-card-title>Default billing address</mat-card-title>
+            </mat-card-header>
+          } @else if (customerData?.defaultShippingAddressId) {
+            <mat-card-header>
+              <mat-card-title>Default shipping address</mat-card-title>
+            </mat-card-header>
+          }
+
+          <mat-card-content>
+            <p>Street:</p>
+            <p>{{ address.streetName }}</p>
+          </mat-card-content>
+          <mat-card-content>
+            <p>City:</p>
+            <p>{{ address.city }}</p>
+          </mat-card-content>
+          <mat-card-content>
+            <p>Postal Code:</p>
+            <p>{{ address.postalCode }}</p>
+          </mat-card-content>
+          <mat-card-content>
+            <p>Country:</p>
+            <p>{{ address.country }}</p>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-button>Edit</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+      <div></div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <button mat-button (click)="goBack()">Back</button>
 </div>

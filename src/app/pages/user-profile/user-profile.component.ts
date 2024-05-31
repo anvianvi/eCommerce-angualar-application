@@ -7,9 +7,10 @@ import { SnackbarService } from '../../core/services/mat-snackbar.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Customer } from '../../core/models/customer';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-  imports: [MatCardModule, MatButtonModule],
+  imports: [MatCardModule, MatButtonModule, MatExpansionModule],
   standalone: true,
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -23,6 +24,12 @@ export class ProfileComponent implements OnInit {
   accesstoken = localStorage.getItem('AppAccessToken') || '';
 
   customerData: Customer | null = null;
+  defaultShippingAddress = this.customerData?.addresses.find(
+    (address) => address.id === this.customerData?.defaultShippingAddressId,
+  );
+  defaultBillingAddress = this.customerData?.addresses.find(
+    (address) => address.id === this.customerData?.defaultBillingAddressId,
+  );
 
   constructor(
     private authenticationService: AuthenticationService,

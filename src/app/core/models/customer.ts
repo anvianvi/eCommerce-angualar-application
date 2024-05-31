@@ -18,17 +18,17 @@ export type Customer = {
   lastName: string;
   dateOfBirth: string;
   password: string;
-  addresses: [
-    {
-      id: string;
-      streetName: string;
-      postalCode: string;
-      city: string;
-      country: string;
-    },
-  ];
+  addresses: {
+    id: string;
+    streetName: string;
+    postalCode: string;
+    city: string;
+    country: string;
+  }[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
+  defaultShippingAddressId?: string;
+  defaultBillingAddressId?: string;
   isEmailVerified: boolean;
   stores: string[];
   authenticationMode: string;
