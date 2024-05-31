@@ -1,3 +1,15 @@
+export type Address = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  streetName: string;
+  streetNumber: string;
+  postalCode: string;
+  city: string;
+  state: string;
+  country: string;
+};
+
 export type Customer = {
   id: string;
   version: number;
@@ -6,30 +18,46 @@ export type Customer = {
   createdAt: string;
   lastModifiedAt: string;
   lastModifiedBy: {
-    clientId: string;
     isPlatformClient: boolean;
   };
   createdBy: {
-    clientId: string;
     isPlatformClient: boolean;
   };
   email: string;
   firstName: string;
   lastName: string;
-  dateOfBirth: string;
   password: string;
-  addresses: {
-    id: string;
-    streetName: string;
-    postalCode: string;
-    city: string;
-    country: string;
-  }[];
+  dateOfBirth: string;
+  addresses: Address[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
-  defaultShippingAddressId?: string;
-  defaultBillingAddressId?: string;
   isEmailVerified: boolean;
-  stores: string[];
+  key: string;
   authenticationMode: string;
+};
+
+export const emptyCustomer: Customer = {
+  id: '',
+  version: 0,
+  versionModifiedAt: '',
+  lastMessageSequenceNumber: 0,
+  createdAt: '',
+  lastModifiedAt: '',
+  lastModifiedBy: {
+    isPlatformClient: false,
+  },
+  createdBy: {
+    isPlatformClient: false,
+  },
+  email: '',
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  password: '',
+  addresses: [],
+  shippingAddressIds: [],
+  billingAddressIds: [],
+  isEmailVerified: false,
+  key: '',
+  authenticationMode: '',
 };
