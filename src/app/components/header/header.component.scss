@@ -1,0 +1,55 @@
+@import "../../../styles/colors.scss";
+@import "../../../styles/breakpoints";
+
+::ng-deep app-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: $header-yellow;
+}
+
+.header-content-wrapper {
+  width: min(90vw, 1200px);
+  margin-inline: auto;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  width: 50px;
+}
+
+.logo {
+  width: 50px;
+  transition: ease-in-out 0.5s;
+
+  @include hover {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.main-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 20px;
+
+  button {
+    height: 80px;
+
+    @include hover {
+      &:hover {
+        border-bottom: 3px solid black;
+      }
+    }
+  }
+}
