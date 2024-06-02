@@ -6,18 +6,13 @@ import { GetProductsService } from '../core/services/api/get-products.service';
 import { ProductCardComponent } from '../components/product-card.component';
 import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
 import { StorageService } from '../core/storage/storage.service';
+import { SortingBarComponent } from '../components/soring-bar.component';
 
 @Component({
-  imports: [
-    MatButton,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    ProductCardComponent,
-  ],
   standalone: true,
   selector: 'app-catalog-page',
   template: `
+    <app-sorting-bar></app-sorting-bar>
     <div class="products-list">
       @for (product of products(); track $index) {
         <app-product-card [product]="product"></app-product-card>
@@ -25,9 +20,6 @@ import { StorageService } from '../core/storage/storage.service';
     </div>
   `,
   styles: `
-    ::ng-deep app-main {
-    }
-
     .products-list {
       display: flex;
       justify-content: center;
@@ -37,6 +29,14 @@ import { StorageService } from '../core/storage/storage.service';
       padding: 20px;
     }
   `,
+  imports: [
+    MatButton,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    ProductCardComponent,
+    SortingBarComponent,
+  ],
 })
 export class CatalogComponent implements OnInit {
   products = computed(() => {
@@ -51,25 +51,6 @@ export class CatalogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.products().length === 0) {
-      this.getProductsService.queryProducts().subscribe({
-        next: () => {
-          this.snackbarService.show(
-            'Products list fetched successfully',
-            'Ok',
-            2000,
-          );
-        },
-        error: (err) => {
-          this.snackbarService.show(
-            `Failed to fetch Products list, ${err}`,
-            'Ok',
-            2000,
-          );
-        },
-      });
-    }
-
     this.getProductsDiscountsService.queryProductsDiscounts().subscribe({
       next: () => {
         this.snackbarService.show(
@@ -86,5 +67,25 @@ export class CatalogComponent implements OnInit {
         );
       },
     });
+
+    if (this.products().length === 0) {
+      this.getProductsService.queryProducts().subscribe({
+        next: () => {
+          this.snackbarService.show(
+            'Products list fetched successfully',
+            'Ok',
+            2000,
+          );
+          console.log(this.products());
+        },
+        error: (err) => {
+          this.snackbarService.show(
+            `Failed to fetch Products list, ${err}`,
+            'Ok',
+            2000,
+          );
+        },
+      });
+    }
   }
 }
