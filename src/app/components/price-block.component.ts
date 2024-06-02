@@ -14,32 +14,26 @@ import { StorageService } from '../core/storage/storage.service';
           {{
             discountedPrice()
               | currencyFormatter
-                : product.masterData.current.masterVariant.prices[0].value
-                    .currencyCode
-                : product.masterData.current.masterVariant.prices[0].value
-                    .fractionDigits
+                : product.masterVariant.prices[0].value.currencyCode
+                : product.masterVariant.prices[0].value.fractionDigits
           }}
         </div>
         <div class="original-discounted-price">
           <span>{{
-            product.masterData.current.masterVariant.prices[0].value.centAmount
+            product.masterVariant.prices[0].value.centAmount
               | currencyFormatter
-                : product.masterData.current.masterVariant.prices[0].value
-                    .currencyCode
-                : product.masterData.current.masterVariant.prices[0].value
-                    .fractionDigits
+                : product.masterVariant.prices[0].value.currencyCode
+                : product.masterVariant.prices[0].value.fractionDigits
           }}</span>
           <span> -{{ discountAmount() }} %</span>
         </div>
       } @else {
         <div>
           {{
-            product.masterData.current.masterVariant.prices[0].value.centAmount
+            product.masterVariant.prices[0].value.centAmount
               | currencyFormatter
-                : product.masterData.current.masterVariant.prices[0].value
-                    .currencyCode
-                : product.masterData.current.masterVariant.prices[0].value
-                    .fractionDigits
+                : product.masterVariant.prices[0].value.currencyCode
+                : product.masterVariant.prices[0].value.fractionDigits
           }}
         </div>
       }
@@ -85,7 +79,7 @@ export class ProductPriceBarComponent implements OnInit {
   constructor(private storageService: StorageService) {}
 
   ngOnInit(): void {
-    const productCategory = this.product.masterData.current.categories[0]?.id;
+    const productCategory = this.product.categories[0]?.id;
     const productDiscount = this.productDiscounts()[0];
 
     if (productDiscount.references[0]?.id === productCategory) {
@@ -94,8 +88,7 @@ export class ProductPriceBarComponent implements OnInit {
 
     if (this.productDiscounts()[0].value.type === 'relative') {
       const price = Number(
-        this.product.masterData.current.masterVariant.prices[0].value
-          .centAmount,
+        this.product.masterVariant.prices[0].value.centAmount,
       );
       const discount = productDiscount.value.permyriad / 100;
 

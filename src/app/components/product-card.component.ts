@@ -12,19 +12,17 @@ import { ProductPriceBarComponent } from './price-block.component';
       <div class="img-container">
         <img
           class="photo"
-          [src]="product.masterData.current.masterVariant.images[0].url"
-          [alt]="
-            'photo of ' + product.masterData.current.name[currentLocation()]
-          "
+          [src]="product.masterVariant.images[0].url"
+          [alt]="'photo of ' + product.name[currentLocation()]"
         />
       </div>
       <app-product-price-bar [product]="product"></app-product-price-bar>
       <div class="text-container">
         <h3 class="h3">
-          {{ product.masterData.current.name[currentLocation()] }}
+          {{ product.name[currentLocation()] }}
         </h3>
         <p class="description">
-          {{ product.masterData.current.description[currentLocation()] }}
+          {{ product.description[currentLocation()] }}
         </p>
       </div>
     </div>
