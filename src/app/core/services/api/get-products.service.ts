@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { SnackbarService } from '../mat-snackbar.service';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { queryProductsResponse } from '../../models/products';
@@ -14,9 +15,11 @@ import { StorageService } from '../../storage/storage.service';
   providedIn: 'root',
 })
 export class GetProductsService {
+  sortBy = signal('name.en');
+  sortOrder = signal('asc');
+
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
-
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
@@ -29,9 +32,15 @@ export class GetProductsService {
       Authorization: `Bearer ${this.accessToken}`,
     });
 
+    const params = new HttpParams().set(
+      'sort',
+      `${this.sortBy()} ${this.sortOrder()}`,
+    );
+
     return this.http
-      .get<queryProductsResponse>(`${this.apiUrl}/products?limit=10`, {
+      .get<queryProductsResponse>(`${this.apiUrl}/product-projections/search`, {
         headers,
+        params,
       })
       .pipe(
         tap((responseData) => {
