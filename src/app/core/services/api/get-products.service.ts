@@ -17,6 +17,8 @@ import { StorageService } from '../../storage/storage.service';
 export class GetProductsService {
   sortBy = signal('name.en');
   sortOrder = signal('asc');
+  filetMinPrice = signal(0);
+  filterMaxPrice = signal(5000);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
@@ -32,10 +34,12 @@ export class GetProductsService {
       Authorization: `Bearer ${this.accessToken}`,
     });
 
-    const params = new HttpParams().set(
-      'sort',
-      `${this.sortBy()} ${this.sortOrder()}`,
-    );
+    const params = new HttpParams()
+      .set(
+        'filter',
+        `variants.price.centAmount:range (${this.filetMinPrice()} to ${this.filterMaxPrice()})`,
+      )
+      .set('sort', `${this.sortBy()} ${this.sortOrder()}`);
 
     return this.http
       .get<queryProductsResponse>(`${this.apiUrl}/product-projections/search`, {

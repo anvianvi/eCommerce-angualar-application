@@ -7,12 +7,14 @@ import { ProductCardComponent } from '../components/product-card.component';
 import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
 import { StorageService } from '../core/storage/storage.service';
 import { SortingBarComponent } from '../components/soring-bar.component';
+import { FilterPriceSliderComponent } from '../components/filter-price-slider.component';
 
 @Component({
   standalone: true,
   selector: 'app-catalog-page',
   template: `
     <app-sorting-bar></app-sorting-bar>
+    <app-filter-price-slider></app-filter-price-slider>
     <div class="products-list">
       @for (product of products(); track $index) {
         <app-product-card [product]="product"></app-product-card>
@@ -36,6 +38,7 @@ import { SortingBarComponent } from '../components/soring-bar.component';
     RouterLinkActive,
     ProductCardComponent,
     SortingBarComponent,
+    FilterPriceSliderComponent,
   ],
 })
 export class CatalogComponent implements OnInit {
@@ -76,7 +79,6 @@ export class CatalogComponent implements OnInit {
             'Ok',
             2000,
           );
-          console.log(this.products());
         },
         error: (err) => {
           this.snackbarService.show(
