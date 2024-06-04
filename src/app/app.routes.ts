@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './shared/components/main.component';
-import { RegistrationComponent } from './auth/components/registration/registration.componet';
-import { NotFoundComponent } from './shared/components/404-page.component';
-import { LoginComponent } from './auth/components/login.componet';
+import { CatalogComponent } from './pages/catalog.component';
+import { NotFoundComponent } from './pages/404-page/404-page.component';
+import { LoginComponent } from './pages/login.component';
+import { RegistrationComponent } from './pages/registration/registration.component';
+import { DetailedProductInformationComponent } from './pages/detailed-product-information.component';
+import { ProfileComponent } from './pages/user-profile/user-profile.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: MainComponent,
+    component: CatalogComponent,
   },
   {
     path: 'login',
@@ -16,20 +18,12 @@ export const routes: Routes = [
   {
     path: 'registration',
     component: RegistrationComponent,
-    // canActivate: [AuthGuard],
   },
-  // {
-  // path: 'catalog',
-  // component: CatalogComponent,
-  // },
-  // {
-  // path: 'profile',
-  // component: ProfileComponent,
-  // },
-  // {
-  // path: 'about',
-  // component: AboutUsComponent,
-  // },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+  },
+  { path: 'product/:id', component: DetailedProductInformationComponent },
   { path: '', redirectTo: '', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

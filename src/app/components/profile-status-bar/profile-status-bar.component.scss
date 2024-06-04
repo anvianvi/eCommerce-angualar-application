@@ -1,0 +1,20 @@
+@import "../../../styles/breakpoints";
+
+.login-info-container {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: flex-end;
+
+  img {
+    cursor: pointer;
+    height: 40px;
+    transition: ease-in-out 0.5s;
+
+    @include hover {
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
