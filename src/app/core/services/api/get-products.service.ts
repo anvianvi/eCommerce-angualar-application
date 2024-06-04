@@ -18,7 +18,7 @@ export class GetProductsService {
   sortBy = signal('name.en');
   sortOrder = signal('asc');
   filterMinPrice = signal(0);
-  filterMaxPrice = signal(5000);
+  filterMaxPrice = signal(3000);
   filterAuthorsList = signal<string[]>([]);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;

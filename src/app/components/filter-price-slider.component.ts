@@ -4,6 +4,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { GetProductsService } from '../core/services/api/get-products.service';
 import { MatInputModule } from '@angular/material/input';
+import { ResetFiltersService } from '../core/services/reset-filters.service';
 
 @Component({
   imports: [MatSliderModule, MatInputModule, FormsModule],
@@ -33,12 +34,20 @@ export class FilterPriceSliderComponent implements OnInit, OnDestroy {
   inputChangeSubject = new Subject<void>();
   inputChangeSubscription: Subscription | undefined;
 
-  constructor(private getProductsService: GetProductsService) {}
+  constructor(
+    private getProductsService: GetProductsService,
+    private resetFiltresService: ResetFiltersService,
+  ) {}
 
   ngOnInit(): void {
     this.inputChangeSubscription = this.inputChangeSubject
       .pipe(debounceTime(this.debounceTimeMs))
-      .subscribe(() => this.onSliderInputChange());
+      .subscribe(() => this.applyFilters());
+
+    this.resetFiltresService.resetFilters$.subscribe(() => {
+      this.startValue = 0;
+      this.endValue = 30;
+    });
   }
 
   ngOnDestroy(): void {
@@ -49,7 +58,7 @@ export class FilterPriceSliderComponent implements OnInit, OnDestroy {
     this.inputChangeSubject.next();
   }
 
-  onSliderInputChange(): void {
+  applyFilters(): void {
     this.getProductsService.filterMinPrice.set(this.startValue * 100);
     this.getProductsService.filterMaxPrice.set(this.endValue * 100);
     this.getProductsService.queryProducts().subscribe();

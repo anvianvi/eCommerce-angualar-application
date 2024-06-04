@@ -19,6 +19,11 @@ import { GetProductsService } from '../core/services/api/get-products.service';
       <mat-option value="priceDesc">Price &#8595;</mat-option>
     </mat-select>
   </mat-form-field>`,
+  styles: `
+    ::ng-deep app-sorting-bar {
+      margin-left: auto;
+    }
+  `,
 })
 export class SortingBarComponent {
   selected = 'nameAsc';

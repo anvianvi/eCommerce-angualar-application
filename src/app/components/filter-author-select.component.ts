@@ -1,9 +1,10 @@
-import { Component, computed, effect } from '@angular/core';
+import { Component, OnInit, computed, effect } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GetProductsService } from '../core/services/api/get-products.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { StorageService } from '../core/storage/storage.service';
+import { ResetFiltersService } from '../core/services/reset-filters.service';
 
 @Component({
   imports: [
@@ -20,7 +21,7 @@ import { StorageService } from '../core/storage/storage.service';
       [formControl]="authors"
       multiple
       [(value)]="selectedAuthors"
-      (selectionChange)="logSelectedAuthors()"
+      (selectionChange)="applyFilters()"
     >
       <mat-select-trigger>
         {{ authors.value?.[0] || '' }}
@@ -43,7 +44,7 @@ import { StorageService } from '../core/storage/storage.service';
     }
   `,
 })
-export class FilterAuthorSelectComponent {
+export class FilterAuthorSelectComponent implements OnInit {
   authors = new FormControl<string[]>([]);
   authorList = computed(() => {
     return this.storage.authors();
@@ -54,13 +55,20 @@ export class FilterAuthorSelectComponent {
   constructor(
     private getProductsService: GetProductsService,
     private storage: StorageService,
+    private resetFiltresService: ResetFiltersService,
   ) {
     effect(() => {
       this.authors.setValue(this.storage.authors());
     });
   }
 
-  logSelectedAuthors(): void {
+  ngOnInit(): void {
+    this.resetFiltresService.resetFilters$.subscribe(() => {
+      this.authors.setValue(this.storage.authors());
+    });
+  }
+
+  applyFilters(): void {
     if (this.authors.value) {
       this.getProductsService.filterAuthorsList.set(this.authors.value);
       this.getProductsService.queryProducts().subscribe();

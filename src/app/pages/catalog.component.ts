@@ -10,14 +10,19 @@ import { SortingBarComponent } from '../components/soring-bar.component';
 import { FilterPriceSliderComponent } from '../components/filter-price-slider.component';
 import { GetAuthorService } from '../core/services/api/get-author.services';
 import { FilterAuthorSelectComponent } from '../components/filter-author-select.component';
+import { ResetAllFiltersButtonComponent } from '../components/reset-filtres-button.component';
 
 @Component({
   standalone: true,
   selector: 'app-catalog-page',
   template: `
-    <app-sorting-bar></app-sorting-bar>
-    <app-filter-price-slider></app-filter-price-slider>
-    <app-filter-author-select></app-filter-author-select>
+    <div class="filters-container">
+      <app-filter-author-select></app-filter-author-select>
+      <app-filter-price-slider></app-filter-price-slider>
+      <app-reset-all-ailters-button></app-reset-all-ailters-button>
+      <app-sorting-bar></app-sorting-bar>
+    </div>
+
     <div class="products-list">
       @for (product of products(); track $index) {
         <app-product-card [product]="product"></app-product-card>
@@ -25,13 +30,23 @@ import { FilterAuthorSelectComponent } from '../components/filter-author-select.
     </div>
   `,
   styles: `
+    ::ng-deep app-catalog-page {
+      padding: 20px;
+    }
+
+    .filters-container {
+      padding-inline: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
     .products-list {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 37px;
-      margin-bottom: 100px;
-      padding: 20px;
     }
   `,
   imports: [
@@ -43,6 +58,7 @@ import { FilterAuthorSelectComponent } from '../components/filter-author-select.
     SortingBarComponent,
     FilterPriceSliderComponent,
     FilterAuthorSelectComponent,
+    ResetAllFiltersButtonComponent,
   ],
 })
 export class CatalogComponent implements OnInit {
