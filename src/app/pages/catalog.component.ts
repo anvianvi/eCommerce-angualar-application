@@ -1,4 +1,4 @@
-import { Component, OnInit, computed } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { SnackbarService } from '../core/services/mat-snackbar.service';
@@ -6,11 +6,12 @@ import { GetProductsService } from '../core/services/api/get-products.service';
 import { ProductCardComponent } from '../components/product-card.component';
 import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
 import { StorageService } from '../core/storage/storage.service';
-import { SortingBarComponent } from '../components/soring-bar.component';
+import { SortingBarComponent } from '../components/sorting-bar.component';
 import { FilterPriceSliderComponent } from '../components/filter-price-slider.component';
 import { GetAuthorService } from '../core/services/api/get-author.services';
 import { FilterAuthorSelectComponent } from '../components/filter-author-select.component';
 import { ResetAllFiltersButtonComponent } from '../components/reset-filtres-button.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -19,7 +20,7 @@ import { ResetAllFiltersButtonComponent } from '../components/reset-filtres-butt
     <div class="filters-container">
       <app-filter-author-select></app-filter-author-select>
       <app-filter-price-slider></app-filter-price-slider>
-      <app-reset-all-ailters-button></app-reset-all-ailters-button>
+      <app-reset-all-filters-button></app-reset-all-filters-button>
       <app-sorting-bar></app-sorting-bar>
     </div>
 
@@ -61,10 +62,11 @@ import { ResetAllFiltersButtonComponent } from '../components/reset-filtres-butt
     ResetAllFiltersButtonComponent,
   ],
 })
-export class CatalogComponent implements OnInit {
+export class CatalogComponent implements OnInit, OnDestroy {
   products = computed(() => {
     return this.storageService.productsInStore();
   });
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private storageService: StorageService,
@@ -93,7 +95,6 @@ export class CatalogComponent implements OnInit {
                     'Ok',
                     2000,
                   );
-                  console.log(this.products());
                 },
                 error: (err) => {
                   this.snackbarService.show(
@@ -122,5 +123,9 @@ export class CatalogComponent implements OnInit {
         );
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

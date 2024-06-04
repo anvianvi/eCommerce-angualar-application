@@ -43,7 +43,7 @@ import { AuthenticationService } from '../core/services/authentication.service';
     `,
   ],
 })
-export class ProfileStatusBarfoComponent {
+export class ProfileStatusBarComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,

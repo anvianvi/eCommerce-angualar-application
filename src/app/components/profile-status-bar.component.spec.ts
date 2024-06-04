@@ -14,12 +14,10 @@ describe('ProfileStatusBarComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
-    // Mock the AuthenticationService
     authenticationService = {
       logout: jest.fn(),
     } as unknown as AuthenticationService;
 
-    // Mock the Router
     router = {
       navigate: jest.fn(),
     } as unknown as Router;
@@ -29,7 +27,7 @@ describe('ProfileStatusBarComponent', () => {
         MatButtonModule,
         MatMenuModule,
         NoopAnimationsModule,
-        ProfileStatusBarComponent, // Import the standalone component
+        ProfileStatusBarComponent,
       ],
       providers: [
         { provide: AuthenticationService, useValue: authenticationService },
@@ -47,7 +45,6 @@ describe('ProfileStatusBarComponent', () => {
   });
 
   it('should navigate to profile when "Profile" button is clicked', () => {
-    // Open the menu
     const trigger = fixture.debugElement.query(By.css('img')).nativeElement;
     trigger.click();
     fixture.detectChanges();
@@ -61,7 +58,6 @@ describe('ProfileStatusBarComponent', () => {
   });
 
   it('should call logout on the AuthenticationService when "Logout" button is clicked', () => {
-    // Open the menu
     const trigger = fixture.debugElement.query(By.css('img')).nativeElement;
     trigger.click();
     fixture.detectChanges();

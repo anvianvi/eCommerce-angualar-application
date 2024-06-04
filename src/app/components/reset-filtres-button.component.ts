@@ -7,7 +7,7 @@ import { ResetFiltersService } from '../core/services/reset-filters.service';
 
 @Component({
   imports: [MatButtonModule, FilterAuthorSelectComponent],
-  selector: 'app-reset-all-ailters-button',
+  selector: 'app-reset-all-filters-button',
   standalone: true,
   template: `
     <button mat-raised-button color="primary" (click)="resetAllFilters()">
@@ -19,11 +19,11 @@ export class ResetAllFiltersButtonComponent {
   constructor(
     private getProductsService: GetProductsService,
     private storageService: StorageService,
-    private resetFiltresService: ResetFiltersService,
+    private resetFiltersService: ResetFiltersService,
   ) {}
 
   resetAllFilters(): void {
-    this.resetFiltresService.triggerResetFilters();
+    this.resetFiltersService.triggerResetFilters();
     this.getProductsService.sortBy.set('name.en');
     this.getProductsService.sortOrder.set('asc');
     this.getProductsService.filterMinPrice.set(0);

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResetFiltersService {
-  resetFilters$ = new BehaviorSubject<void>(undefined);
+  resetFilters$ = new Subject<void>();
 
   triggerResetFilters(): void {
     this.resetFilters$.next();

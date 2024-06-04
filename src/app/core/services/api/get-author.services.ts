@@ -45,7 +45,6 @@ export class GetAuthorService {
           const authors = responseData.facets[
             'variants.attributes.author'
           ].terms.map((term) => term.term);
-          console.log(authors);
           this.storageService.authors.set(authors);
           this.getProductsService.filterAuthorsList.set(authors);
         }),

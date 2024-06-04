@@ -20,7 +20,6 @@ import { ResetFiltersService } from '../core/services/reset-filters.service';
     <mat-select
       [formControl]="authors"
       multiple
-      [(value)]="selectedAuthors"
       (selectionChange)="applyFilters()"
     >
       <mat-select-trigger>
@@ -50,12 +49,10 @@ export class FilterAuthorSelectComponent implements OnInit {
     return this.storage.authors();
   });
 
-  selectedAuthors = this.authorList();
-
   constructor(
     private getProductsService: GetProductsService,
     private storage: StorageService,
-    private resetFiltresService: ResetFiltersService,
+    private resetFiltersService: ResetFiltersService,
   ) {
     effect(() => {
       this.authors.setValue(this.storage.authors());
@@ -63,7 +60,7 @@ export class FilterAuthorSelectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.resetFiltresService.resetFilters$.subscribe(() => {
+    this.resetFiltersService.resetFilters$.subscribe(() => {
       this.authors.setValue(this.storage.authors());
     });
   }
