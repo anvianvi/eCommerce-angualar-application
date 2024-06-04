@@ -17,8 +17,9 @@ import { StorageService } from '../../storage/storage.service';
 export class GetProductsService {
   sortBy = signal('name.en');
   sortOrder = signal('asc');
-  filetMinPrice = signal(0);
+  filterMinPrice = signal(0);
   filterMaxPrice = signal(5000);
+  filterAuthorsList = signal<string[]>([]);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
@@ -34,11 +35,16 @@ export class GetProductsService {
       Authorization: `Bearer ${this.accessToken}`,
     });
 
+    const quotedAuthors = this.filterAuthorsList()
+      .map((author) => `"${author}"`)
+      .join(', ');
+
     const params = new HttpParams()
       .set(
         'filter',
-        `variants.price.centAmount:range (${this.filetMinPrice()} to ${this.filterMaxPrice()})`,
+        `variants.price.centAmount:range (${this.filterMinPrice()} to ${this.filterMaxPrice()})`,
       )
+      .append('filter', `variants.attributes.author:${quotedAuthors}`)
       .set('sort', `${this.sortBy()} ${this.sortOrder()}`);
 
     return this.http
