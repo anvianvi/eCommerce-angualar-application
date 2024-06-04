@@ -12,11 +12,11 @@ import { AuthenticationService } from '../core/services/authentication.service';
     <div class="login-info-container">
       <img
         src="assets/login.svg"
-        alt="icon of logined account"
+        alt="icon of logged-in account"
         [matMenuTriggerFor]="beforeMenu"
       />
       <mat-menu #beforeMenu="matMenu">
-        <!-- <button mat-menu-item (click)="openProfile()">Profile</button> -->
+        <button mat-menu-item (click)="openProfile()">Profile</button>
         <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
     </div>
@@ -50,8 +50,7 @@ export class ProfileStatusBarfoComponent {
   ) {}
 
   openProfile(): void {
-    console.log('profile process');
-    // this.router.navigate(['/profile']);
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {

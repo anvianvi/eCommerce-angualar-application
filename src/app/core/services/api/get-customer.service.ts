@@ -6,14 +6,14 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { queryProductsResponse } from '../../models/products';
 import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
+import { Customer } from '../../models/customer';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GetProductsService {
+export class GetCustomerService {
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
 
@@ -23,19 +23,20 @@ export class GetProductsService {
     private storageService: StorageService,
   ) {}
 
-  queryProducts(): Observable<queryProductsResponse> {
+  queryCustomer(customerId: string): Observable<Customer> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
     });
 
     return this.http
-      .get<queryProductsResponse>(`${this.apiUrl}/products?limit=10`, {
+      .get<Customer>(`${this.apiUrl}/customers/${customerId}`, {
         headers,
       })
       .pipe(
         tap((responseData) => {
-          this.storageService.productsInStore.set(responseData.results);
+          console.log(responseData);
+          this.storageService.CurrentCustomer.set(responseData);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

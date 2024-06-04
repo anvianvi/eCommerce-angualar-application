@@ -30,14 +30,16 @@ import { MatButton } from '@angular/material/button';
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>
-    @if (isAuthenticated()) {
-      <app-profile-status-bar></app-profile-status-bar>
-    } @else {
-      <div class="buttons-container">
-        <button mat-button (click)="toLogin()">login</button>
-        <button mat-button (click)="toRegistration()">regestration</button>
-      </div>
-    }
+    <div class="buttons-container">
+      <button mat-button (click)="toCatalog()">Catalog</button>
+
+      @if (isAuthenticated()) {
+        <app-profile-status-bar></app-profile-status-bar>
+      } @else {
+        <button mat-button (click)="toLogin()">Login</button>
+        <button mat-button (click)="toRegistration()">Registration</button>
+      }
+    </div>
   </header> `,
   styles: [
     `
@@ -88,6 +90,10 @@ export class HeaderComponent {
     private authenticationService: AuthenticationService,
     private router: Router,
   ) {}
+
+  toCatalog(): void {
+    this.router.navigate(['/']);
+  }
 
   toLogin(): void {
     this.router.navigate(['/login']);

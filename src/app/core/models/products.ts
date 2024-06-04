@@ -7,14 +7,10 @@ export type Product = {
   masterData: {
     current: {
       name: {
-        'en-US': string;
-        'en-GB': string;
-        'de-DE': string;
+        en: string;
       };
       description: {
-        'de-DE': string;
-        'en-GB': string;
-        'en-US': string;
+        en: string;
       };
       categories: {
         typeId: string;
@@ -22,9 +18,7 @@ export type Product = {
       }[];
       categoryOrderHints: Record<string, unknown>;
       slug: {
-        'en-US': string;
-        'en-GB': string;
-        'de-DE': string;
+        en: string;
       };
       masterVariant: {
         id: number;
@@ -35,7 +29,7 @@ export type Product = {
             type: string;
             currencyCode: string;
             centAmount: number;
-            fractionDigits: number;
+            fractionDigits: string;
           };
           country: string;
         }[];

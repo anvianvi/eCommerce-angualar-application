@@ -194,7 +194,7 @@ export class RegistrationComponent implements OnInit {
                   body.email,
                   body.password,
                 );
-                this.router.navigate(['/main']);
+                this.router.navigate(['/']);
                 this.snackbarService.show(
                   'Successfully registered and logged in',
                   'Close',

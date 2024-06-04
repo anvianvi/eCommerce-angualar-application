@@ -20,10 +20,7 @@ import {
       </p>
       <p>
         Let's get you back on track:
-        <a
-          routerLink="/main"
-          routerLinkActive="active"
-          ariaCurrentWhenActive="page"
+        <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page"
           >go to the homepage</a
         >
       </p>

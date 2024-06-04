@@ -1,15 +1,11 @@
 import { Component, OnInit, computed } from '@angular/core';
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet,
-} from '@angular/router';
-import { AuthenticationService } from '../core/services/authentication.service';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { SnackbarService } from '../core/services/mat-snackbar.service';
 import { GetProductsService } from '../core/services/api/get-products.service';
 import { ProductCardComponent } from '../components/product-card.component';
+import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
+import { StorageService } from '../core/storage/storage.service';
 
 @Component({
   imports: [
@@ -20,7 +16,7 @@ import { ProductCardComponent } from '../components/product-card.component';
     ProductCardComponent,
   ],
   standalone: true,
-  selector: 'app-main',
+  selector: 'app-catalog-page',
   template: `
     <div class="products-list">
       @for (product of products(); track $index) {
@@ -38,47 +34,57 @@ import { ProductCardComponent } from '../components/product-card.component';
       flex-wrap: wrap;
       gap: 37px;
       margin-bottom: 100px;
+      padding: 20px;
     }
   `,
 })
-export class MainComponent implements OnInit {
-  isAuthenticated = computed(() => {
-    return this.authenticationService.isAuthenticated();
-  });
-
+export class CatalogComponent implements OnInit {
   products = computed(() => {
-    return this.getProductsService.productsInStore();
+    return this.storageService.productsInStore();
   });
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private router: Router,
+    private storageService: StorageService,
     private getProductsService: GetProductsService,
+    private getProductsDiscountsService: GetProductsDiscountsService,
     private snackbarService: SnackbarService,
   ) {}
 
   ngOnInit(): void {
-    if (!this.isAuthenticated()) {
-      this.router.navigate(['/']);
-    }
-
     if (this.products().length === 0) {
       this.getProductsService.queryProducts().subscribe({
         next: () => {
           this.snackbarService.show(
-            'Customer token fetched successfully',
+            'Products list fetched successfully',
             'Ok',
             2000,
           );
         },
         error: (err) => {
           this.snackbarService.show(
-            `Failed to fetch Customer AccessToken, ${err}`,
+            `Failed to fetch Products list, ${err}`,
             'Ok',
             2000,
           );
         },
       });
     }
+
+    this.getProductsDiscountsService.queryProductsDiscounts().subscribe({
+      next: () => {
+        this.snackbarService.show(
+          'Products Discounts fetched successfully',
+          'Ok',
+          2000,
+        );
+      },
+      error: (err) => {
+        this.snackbarService.show(
+          `Failed to fetch Products Discounts, ${err}`,
+          'Ok',
+          2000,
+        );
+      },
+    });
   }
 }
