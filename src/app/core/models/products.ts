@@ -1,141 +1,61 @@
 export type Product = {
+  categories: Array<{
+    id: string;
+    typeId: string;
+  }>;
+  categoryOrderHints: Record<string, string>;
+  createdAt: string;
+  description: {
+    [key: string]: string;
+  };
+  hasStagedChanges: boolean;
   id: string;
+  lastModifiedAt: string;
+  masterVariant: {
+    id: number;
+    sku: string;
+    key: string;
+    prices: Array<{
+      id: string;
+      value: {
+        type: string;
+        currencyCode: string;
+        centAmount: number;
+        fractionDigits: number;
+      };
+    }>;
+    images: Array<{
+      dimensions: string;
+      url: string;
+    }>;
+  };
+  metaDescription: {
+    [key: string]: string;
+  };
+  metaTitle: {
+    [key: string]: string;
+  };
+  name: {
+    [key: string]: string;
+  };
+  priceMode: string;
   productType: {
     typeId: string;
     id: string;
   };
-  masterData: {
-    current: {
-      name: {
-        en: string;
-      };
-      description: {
-        en: string;
-      };
-      categories: {
-        typeId: string;
-        id: string;
-      }[];
-      categoryOrderHints: Record<string, unknown>;
-      slug: {
-        en: string;
-      };
-      masterVariant: {
-        id: number;
-        sku: string;
-        prices: {
-          id: string;
-          value: {
-            type: string;
-            currencyCode: string;
-            centAmount: number;
-            fractionDigits: string;
-          };
-          country: string;
-        }[];
-        images: {
-          url: string;
-          dimensions: {
-            w: number;
-            h: number;
-          };
-        }[];
-        attributes: {
-          name: string;
-          value: {
-            key?: string;
-            label?: {
-              'de-DE': string;
-              'en-GB': string;
-              'en-US': string;
-            };
-            'en-GB'?: string;
-            'de-DE'?: string;
-            'en-US'?: string;
-          };
-        }[];
-        availability: {
-          isOnStock: boolean;
-          availableQuantity: number;
-          version: number;
-          id: string;
-        };
-      };
-      searchKeywords: Record<string, unknown>;
-    };
-    staged: {
-      name: {
-        'en-US': string;
-        'en-GB': string;
-        'de-DE': string;
-      };
-      description: {
-        'de-DE': string;
-        'en-GB': string;
-        'en-US': string;
-      };
-      categories: {
-        typeId: string;
-        id: string;
-      }[];
-      categoryOrderHints: Record<string, unknown>;
-      slug: {
-        'en-US': string;
-        'en-GB': string;
-        'de-DE': string;
-      };
-      masterVariant: {
-        id: number;
-        sku: string;
-        prices: {
-          id: string;
-          value: {
-            type: string;
-            currencyCode: string;
-            centAmount: number;
-            fractionDigits: number;
-          };
-          country: string;
-        }[];
-        images: {
-          url: string;
-          dimensions: {
-            w: number;
-            h: number;
-          };
-        }[];
-        attributes: {
-          name: string;
-          value: {
-            key?: string;
-            label?: {
-              'de-DE': string;
-              'en-GB': string;
-              'en-US': string;
-            };
-            'en-GB'?: string;
-            'de-DE'?: string;
-            'en-US'?: string;
-          };
-        }[];
-        availability: {
-          isOnStock: boolean;
-          availableQuantity: number;
-          version: number;
-          id: string;
-        };
-      };
-      searchKeywords: Record<string, unknown>;
-    };
-    published: boolean;
-    hasStagedChanges: boolean;
+  published: boolean;
+  searchKeywords: {
+    [key: string]: Array<string>;
   };
-  key: string;
+  slug: {
+    [key: string]: string;
+  };
   taxCategory: {
     typeId: string;
     id: string;
   };
-  lastVariantId: number;
+  variants: Array<string>;
+  version: number;
 };
 
 export type queryProductsResponse = {

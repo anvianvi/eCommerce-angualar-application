@@ -1,5 +1,5 @@
 import { Component, computed } from '@angular/core';
-import { ProfileStatusBarfoComponent } from './profile-status-bar.component';
+import { ProfileStatusBarComponent } from './profile-status-bar.component';
 import { AuthenticationService } from '../core/services/authentication.service';
 import {
   RouterOutlet,
@@ -12,7 +12,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
   imports: [
     MatButton,
-    ProfileStatusBarfoComponent,
+    ProfileStatusBarComponent,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
@@ -31,13 +31,13 @@ import { MatButton } from '@angular/material/button';
       </a>
     </div>
     <div class="buttons-container">
-      <button mat-button (click)="toCatalog()">Catalog</button>
+      <button mat-button (click)="toCatalog()">catalog</button>
 
       @if (isAuthenticated()) {
         <app-profile-status-bar></app-profile-status-bar>
       } @else {
-        <button mat-button (click)="toLogin()">Login</button>
-        <button mat-button (click)="toRegistration()">Registration</button>
+        <button mat-button (click)="toLogin()">login</button>
+        <button mat-button (click)="toRegistration()">registration</button>
       }
     </div>
   </header> `,
