@@ -31,6 +31,8 @@ export type Customer = {
   addresses: Address[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
+  defaultShippingAddressId?: string;
+  defaultBillingAddressId?: string;
   isEmailVerified: boolean;
   key: string;
   authenticationMode: string;
