@@ -4,6 +4,7 @@ import { NotFoundComponent } from './pages/404-page.component';
 import { LoginComponent } from './pages/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { HeroComponent } from './pages/hero.component';
+import { DetailedProductInformationComponent } from './pages/detailed-product-information.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,8 @@ export const routes: Routes = [
   // path: 'about',
   // component: AboutUsComponent,
   // },
+  // {
+  { path: 'product/:id', component: DetailedProductInformationComponent },
   { path: '', redirectTo: '', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
