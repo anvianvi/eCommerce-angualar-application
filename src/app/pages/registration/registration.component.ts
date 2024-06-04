@@ -29,8 +29,10 @@ import {
   CustomerAuthService,
   CustomerRegistrationForm,
 } from '../../core/services/api/customer-auth.service';
+import { GetCustomerService } from '../../core/services/api/get-customer.service';
 import { FormatDataService } from '../../core/services/format-date.service';
 import { SnackbarService } from '../../core/services/mat-snackbar.service';
+import { Customer } from '../../core/models/customer';
 
 @Component({
   imports: [
@@ -75,6 +77,7 @@ export class RegistrationComponent implements OnInit {
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
     private customerAuthService: CustomerAuthService,
+    private getCustomerService: GetCustomerService,
   ) {}
 
   ngOnInit(): void {
@@ -194,7 +197,11 @@ export class RegistrationComponent implements OnInit {
                   body.email,
                   body.password,
                 );
-                this.router.navigate(['/']);
+                this.router
+                  .navigate(['/'])
+                  .then(() =>
+                    this.handlePostRegistrationTasks(response.customer),
+                  );
                 this.snackbarService.show(
                   'Successfully registered and logged in',
                   'Close',
@@ -205,5 +212,27 @@ export class RegistrationComponent implements OnInit {
           });
       },
     });
+  }
+  private handlePostRegistrationTasks(customer: Customer): void {
+    if (this.registrationForm.value.setDefaultShipping) {
+      this.getCustomerService.setDefaultShippingAddress(customer).subscribe({
+        next: (response) => {
+          console.log('Default shipping address set', response);
+        },
+        error: (error) => {
+          console.error('Error setting default shipping address:', error);
+        },
+      });
+    }
+    if (this.registrationForm.value.setDefaultBilling) {
+      this.getCustomerService.setDefaultBillingAddress(customer).subscribe({
+        next: (response) => {
+          console.log('Default billing address set', response);
+        },
+        error: (error) => {
+          console.error('Error setting default billing address:', error);
+        },
+      });
+    }
   }
 }

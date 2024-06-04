@@ -1,32 +1,31 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../core/services/authentication.service';
-import { GetCustomerService } from '../core/services/api/get-customer.service';
-import { StorageService } from '../core/storage/storage.service';
-import { SnackbarService } from '../core/services/mat-snackbar.service';
+import { AuthenticationService } from '../../core/services/authentication.service';
+import { SnackbarService } from '../../core/services/mat-snackbar.service';
+import { GetCustomerService } from '../../core/services/api/get-customer.service';
+import { StorageService } from '../../core/storage/storage.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { Address } from '../../core/models/customer';
 
 @Component({
-  imports: [],
+  imports: [MatCardModule, MatButtonModule, MatExpansionModule],
   standalone: true,
   selector: 'app-user-profile',
-  template: `<div>
-    <h1>
-      Here should be User Profile Page. It should display information about a
-      user's profile.
-    </h1>
-    <p>{{ currentCustomer().email }}</p>
-    <button (click)="goBack()">Back</button>
-  </div>`,
-  styles: ``,
+  templateUrl: './user-profile.component.html',
+  styleUrl: './user-profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
   isAuthenticated = computed(() => {
     return this.authenticationService.isAuthenticated();
   });
+  customerId = localStorage.getItem('userId');
+  accesstoken = localStorage.getItem('AppAccessToken') || '';
 
   currentCustomer = computed(() => {
-    return this.storage.CurrentCustomer();
+    return this.storage.currentCustomer();
   });
 
   constructor(
@@ -38,12 +37,25 @@ export class ProfileComponent implements OnInit {
     private snackbarService: SnackbarService,
   ) {}
 
+  get defaultShippingAddress(): Address | undefined {
+    return this.currentCustomer().addresses.find(
+      (address) =>
+        address.id === this.currentCustomer().defaultShippingAddressId,
+    );
+  }
+
+  get defaultBillingAddress(): Address | undefined {
+    return this.currentCustomer().addresses.find(
+      (address) =>
+        address.id === this.currentCustomer().defaultBillingAddressId,
+    );
+  }
+
   ngOnInit(): void {
     if (!this.isAuthenticated()) {
       this.router.navigate(['/']);
     }
     const currentCustomerId = localStorage.getItem('userId') || '';
-
     this.getCustomerService.queryCustomer(currentCustomerId).subscribe({
       next: () => {
         this.snackbarService.show(
@@ -60,8 +72,6 @@ export class ProfileComponent implements OnInit {
         );
       },
     });
-
-    console.log(this.currentCustomer());
   }
 
   goBack(): void {

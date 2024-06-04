@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { SnackbarService } from '../core/services/mat-snackbar.service';
@@ -11,7 +11,6 @@ import { FilterPriceSliderComponent } from '../components/filter-price-slider.co
 import { GetAuthorService } from '../core/services/api/get-author.services';
 import { FilterAuthorSelectComponent } from '../components/filter-author-select.component';
 import { ResetAllFiltersButtonComponent } from '../components/reset-filtres-button.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -62,11 +61,10 @@ import { Subscription } from 'rxjs';
     ResetAllFiltersButtonComponent,
   ],
 })
-export class CatalogComponent implements OnInit, OnDestroy {
+export class CatalogComponent implements OnInit {
   products = computed(() => {
     return this.storageService.productsInStore();
   });
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private storageService: StorageService,
@@ -123,9 +121,5 @@ export class CatalogComponent implements OnInit, OnDestroy {
         );
       },
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

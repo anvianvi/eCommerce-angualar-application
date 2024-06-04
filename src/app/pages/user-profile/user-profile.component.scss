@@ -1,0 +1,53 @@
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+}
+mat-accordion {
+  width: 50vw;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.info-cards {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-cards_card {
+  width: 30vw;
+  height: 50vh;
+  background-color: #fffaf0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  button {
+    background-color: black;
+    color: white;
+  }
+}
+
+// All addresses cards
+
+mat-card-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+mat-card-header {
+  padding: 1rem;
+}
+
+mat-card-title {
+  font-size: 1rem;
+}

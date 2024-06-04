@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/header.component';
+import { HeaderComponent } from './components/header/header.component';
 import { ObtainAccessTokenService } from './core/services/api/obtain-access-token';
 
 @Component({

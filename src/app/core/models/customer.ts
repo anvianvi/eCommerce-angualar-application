@@ -27,9 +27,12 @@ export type Customer = {
   firstName: string;
   lastName: string;
   password: string;
+  dateOfBirth: string;
   addresses: Address[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
+  defaultShippingAddressId?: string;
+  defaultBillingAddressId?: string;
   isEmailVerified: boolean;
   key: string;
   authenticationMode: string;
@@ -51,6 +54,7 @@ export const emptyCustomer: Customer = {
   email: '',
   firstName: '',
   lastName: '',
+  dateOfBirth: '',
   password: '',
   addresses: [],
   shippingAddressIds: [],
