@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../core/services/authentication.service';
-import { ProfileStatusBarComponent } from './profile-status-bar.component';
+import { AuthenticationService } from '../../core/services/authentication.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ProfileStatusBarComponent } from './profile-status-bar.component';
 
 describe('ProfileStatusBarComponent', () => {
   let component: ProfileStatusBarComponent;

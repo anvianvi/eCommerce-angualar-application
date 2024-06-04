@@ -1,16 +1,10 @@
 @import "../../../styles/breakpoints";
 
 .login-info-container {
-  font-weight: 500;
   display: flex;
   gap: 30px;
   align-items: center;
   justify-content: flex-end;
-
-  span {
-    text-transform: capitalize;
-    font-size: 16px;
-  }
 
   img {
     cursor: pointer;
@@ -22,10 +16,5 @@
         transform: scale(1.1);
       }
     }
-  }
-
-  p {
-    margin: 0;
-    cursor: default;
   }
 }

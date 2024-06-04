@@ -1,6 +1,9 @@
 <div class="login-info-container">
-  <p>Welcome again!</p>
-  <img src="assets/login.svg" alt="Profile" [matMenuTriggerFor]="beforeMenu" />
+  <img
+    src="assets/login.svg"
+    alt="icon of logged-in account"
+    [matMenuTriggerFor]="beforeMenu"
+  />
   <mat-menu #beforeMenu="matMenu">
     <button mat-menu-item (click)="openProfile()">Profile</button>
     <button mat-menu-item (click)="logout()">Logout</button>

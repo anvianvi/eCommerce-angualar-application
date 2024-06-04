@@ -11,7 +11,7 @@ import { AuthenticationService } from '../../core/services/authentication.servic
   templateUrl: './profile-status-bar.component.html',
   styleUrl: './profile-status-bar.component.scss',
 })
-export class ProfileStatusBarfoComponent {
+export class ProfileStatusBarComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router,

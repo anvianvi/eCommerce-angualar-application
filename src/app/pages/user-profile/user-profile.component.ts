@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit {
   accesstoken = localStorage.getItem('AppAccessToken') || '';
 
   currentCustomer = computed(() => {
-    return this.storage.CurrentCustomer();
+    return this.storage.currentCustomer();
   });
 
   constructor(
@@ -51,9 +51,7 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  // If user is not logged in, redirect to main page
   ngOnInit(): void {
-    console.log('App token', localStorage.getItem('AppAccessToken'));
     if (!this.isAuthenticated()) {
       this.router.navigate(['/']);
     }

@@ -26,7 +26,6 @@ type action = {
 export class GetCustomerService {
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
-  private currentCustomer: Customer = this.storageService.CurrentCustomer();
 
   constructor(
     private http: HttpClient,
@@ -46,8 +45,7 @@ export class GetCustomerService {
       })
       .pipe(
         tap((responseData) => {
-          this.storageService.CurrentCustomer.set(responseData);
-          this.currentCustomer = this.storageService.CurrentCustomer();
+          this.storageService.currentCustomer.set(responseData);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
