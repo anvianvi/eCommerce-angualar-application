@@ -18,8 +18,7 @@ export class ProfileStatusBarfoComponent {
   ) {}
 
   openProfile(): void {
-    console.log('profile process');
-    // this.router.navigate(['/profile']);
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {
