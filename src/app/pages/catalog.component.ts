@@ -8,6 +8,8 @@ import { GetProductsDiscountsService } from '../core/services/api/get-discounts.
 import { StorageService } from '../core/storage/storage.service';
 import { SortingBarComponent } from '../components/soring-bar.component';
 import { FilterPriceSliderComponent } from '../components/filter-price-slider.component';
+import { GetAuthorService } from '../core/services/api/get-author.services';
+import { FilterAuthorSelectComponent } from '../components/filter-author-select.component';
 
 @Component({
   standalone: true,
@@ -15,6 +17,7 @@ import { FilterPriceSliderComponent } from '../components/filter-price-slider.co
   template: `
     <app-sorting-bar></app-sorting-bar>
     <app-filter-price-slider></app-filter-price-slider>
+    <app-filter-author-select></app-filter-author-select>
     <div class="products-list">
       @for (product of products(); track $index) {
         <app-product-card [product]="product"></app-product-card>
@@ -39,6 +42,7 @@ import { FilterPriceSliderComponent } from '../components/filter-price-slider.co
     ProductCardComponent,
     SortingBarComponent,
     FilterPriceSliderComponent,
+    FilterAuthorSelectComponent,
   ],
 })
 export class CatalogComponent implements OnInit {
@@ -51,43 +55,56 @@ export class CatalogComponent implements OnInit {
     private getProductsService: GetProductsService,
     private getProductsDiscountsService: GetProductsDiscountsService,
     private snackbarService: SnackbarService,
+    private getAuthorService: GetAuthorService,
   ) {}
 
   ngOnInit(): void {
-    this.getProductsDiscountsService.queryProductsDiscounts().subscribe({
+    this.getAuthorService.queryAuthors().subscribe({
       next: () => {
-        this.snackbarService.show(
-          'Products Discounts fetched successfully',
-          'Ok',
-          2000,
-        );
+        this.snackbarService.show('Authors fetched successfully', 'Ok', 2000);
+        this.getProductsDiscountsService.queryProductsDiscounts().subscribe({
+          next: () => {
+            this.snackbarService.show(
+              'Products Discounts fetched successfully',
+              'Ok',
+              2000,
+            );
+            if (this.products().length === 0) {
+              this.getProductsService.queryProducts().subscribe({
+                next: () => {
+                  this.snackbarService.show(
+                    'Products list fetched successfully',
+                    'Ok',
+                    2000,
+                  );
+                  console.log(this.products());
+                },
+                error: (err) => {
+                  this.snackbarService.show(
+                    `Failed to fetch Products list, ${err}`,
+                    'Ok',
+                    2000,
+                  );
+                },
+              });
+            }
+          },
+          error: (err) => {
+            this.snackbarService.show(
+              `Failed to fetch Products Discounts, ${err}`,
+              'Ok',
+              2000,
+            );
+          },
+        });
       },
       error: (err) => {
         this.snackbarService.show(
-          `Failed to fetch Products Discounts, ${err}`,
+          `Failed to fetch Authors list, ${err}`,
           'Ok',
           2000,
         );
       },
     });
-
-    if (this.products().length === 0) {
-      this.getProductsService.queryProducts().subscribe({
-        next: () => {
-          this.snackbarService.show(
-            'Products list fetched successfully',
-            'Ok',
-            2000,
-          );
-        },
-        error: (err) => {
-          this.snackbarService.show(
-            `Failed to fetch Products list, ${err}`,
-            'Ok',
-            2000,
-          );
-        },
-      });
-    }
   }
 }
