@@ -1,30 +1,49 @@
-import { of, Subject, Subscription } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatInputModule } from '@angular/material/input';
+import { Subject, of } from 'rxjs';
 import { FilterPriceSliderComponent } from './filter-price-slider.component';
 import { GetProductsService } from '../core/services/api/get-products.service';
+import { ResetFiltersService } from '../core/services/reset-filters.service';
 
 describe('FilterPriceSliderComponent', () => {
   let component: FilterPriceSliderComponent;
+  let fixture: ComponentFixture<FilterPriceSliderComponent>;
   let getProductsService: GetProductsService;
+  let resetFiltersService: ResetFiltersService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     getProductsService = {
-      sortBy: { set: jest.fn() },
-      sortOrder: { set: jest.fn() },
+      filterMinPrice: {
+        set: jest.fn(),
+      },
+      filterMaxPrice: {
+        set: jest.fn(),
+      },
       queryProducts: jest.fn(() => of({})),
     } as unknown as GetProductsService;
 
-    component = new FilterPriceSliderComponent(getProductsService);
-    component.startValue = 0;
-    component.endValue = 30;
-    component.debounceTimeMs = 900;
-    component.inputChangeSubject = new Subject<void>();
-    component.inputChangeSubscription = new Subscription();
-  });
+    resetFiltersService = {
+      resetFilters$: new Subject<void>(),
+    } as unknown as ResetFiltersService;
 
-  afterEach(() => {
-    if (component.inputChangeSubscription) {
-      component.inputChangeSubscription.unsubscribe();
-    }
+    await TestBed.configureTestingModule({
+      imports: [
+        MatSliderModule,
+        MatInputModule,
+        FormsModule,
+        FilterPriceSliderComponent,
+      ],
+      providers: [
+        { provide: GetProductsService, useValue: getProductsService },
+        { provide: ResetFiltersService, useValue: resetFiltersService },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(FilterPriceSliderComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -38,7 +57,7 @@ describe('FilterPriceSliderComponent', () => {
 
   it('should subscribe to input changes with debounce', () => {
     jest.useFakeTimers();
-    const spy = jest.spyOn(component, 'onSliderInputChange');
+    const spy = jest.spyOn(component, 'applyFilters');
 
     component.ngOnInit();
 
@@ -59,5 +78,26 @@ describe('FilterPriceSliderComponent', () => {
     component.ngOnDestroy();
 
     expect(unsubscribeSpy).toHaveBeenCalled();
+  });
+
+  it('should reset values on reset event', () => {
+    component.ngOnInit();
+    component.startValue = 10;
+    component.endValue = 20;
+
+    (resetFiltersService.resetFilters$ as Subject<void>).next();
+
+    expect(component.startValue).toBe(0);
+    expect(component.endValue).toBe(30);
+  });
+
+  it('should apply filters correctly', () => {
+    component.startValue = 5;
+    component.endValue = 25;
+    component.applyFilters();
+
+    expect(getProductsService.filterMinPrice.set).toHaveBeenCalledWith(500);
+    expect(getProductsService.filterMaxPrice.set).toHaveBeenCalledWith(2500);
+    expect(getProductsService.queryProducts).toHaveBeenCalled();
   });
 });

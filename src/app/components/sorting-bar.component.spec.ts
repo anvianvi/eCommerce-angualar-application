@@ -1,19 +1,31 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { GetProductsService } from '../core/services/api/get-products.service';
-import { SortingBarComponent } from './soring-bar.component';
+import { SortingBarComponent } from './sorting-bar.component';
 
 describe('SortingBarComponent', () => {
   let component: SortingBarComponent;
+  let fixture: ComponentFixture<SortingBarComponent>;
   let getProductsService: GetProductsService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     getProductsService = {
       sortBy: { set: jest.fn() },
       sortOrder: { set: jest.fn() },
       queryProducts: jest.fn(() => of({})),
     } as unknown as GetProductsService;
 
-    component = new SortingBarComponent(getProductsService);
+    await TestBed.configureTestingModule({
+      imports: [SortingBarComponent, BrowserAnimationsModule],
+      providers: [
+        { provide: GetProductsService, useValue: getProductsService },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SortingBarComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
