@@ -50,7 +50,7 @@ export class FilterPriceSliderComponent implements OnInit, OnDestroy {
   }
 
   onSliderInputChange(): void {
-    this.getProductsService.filetMinPrice.set(this.startValue * 100);
+    this.getProductsService.filterMinPrice.set(this.startValue * 100);
     this.getProductsService.filterMaxPrice.set(this.endValue * 100);
     this.getProductsService.queryProducts().subscribe();
   }
