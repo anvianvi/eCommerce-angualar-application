@@ -21,49 +21,53 @@
         <button mat-button>Edit</button>
       </mat-action-row>
     </mat-expansion-panel>
-    <mat-expansion-panel [disabled]="!currentCustomer()">
+    <mat-expansion-panel
+      [disabled]="!currentCustomer().defaultShippingAddressId"
+    >
       <mat-expansion-panel-header>
         <mat-panel-title> Default shipping address </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         <p>Street:</p>
-        <!-- <p>{{ defaultShippingAddress?.streetName }}</p> -->
+        <p>{{ defaultShippingAddress?.streetName }}</p>
       </div>
       <div>
         <p>City:</p>
-        <!-- <p>{{ defaultShippingAddress?.city }}</p> -->
+        <p>{{ defaultShippingAddress?.city }}</p>
       </div>
       <div>
         <p>Postal Code:</p>
-        <!-- <p>{{ defaultShippingAddress?.postalCode }}</p> -->
+        <p>{{ defaultShippingAddress?.postalCode }}</p>
       </div>
       <div>
         <p>Country:</p>
-        <!-- <p>{{ defaultShippingAddress?.country }}</p> -->
+        <p>{{ defaultShippingAddress?.country }}</p>
       </div>
       <mat-action-row>
         <button mat-button>Edit</button>
       </mat-action-row>
     </mat-expansion-panel>
-    <mat-expansion-panel [disabled]="!currentCustomer()">
+    <mat-expansion-panel
+      [disabled]="!currentCustomer().defaultBillingAddressId"
+    >
       <mat-expansion-panel-header>
         <mat-panel-title> Default billing address </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         <p>Street:</p>
-        <!-- <p>{{ defaultBillingAddress?.streetName }}</p> -->
+        <p>{{ defaultBillingAddress?.streetName }}</p>
       </div>
       <div>
         <p>City:</p>
-        <!-- <p>{{ defaultBillingAddress?.city }}</p> -->
+        <p>{{ defaultBillingAddress?.city }}</p>
       </div>
       <div>
         <p>Postal Code:</p>
-        <!-- <p>{{ defaultBillingAddress?.postalCode }}</p> -->
+        <p>{{ defaultBillingAddress?.postalCode }}</p>
       </div>
       <div>
         <p>Country:</p>
-        <!-- <p>{{ defaultBillingAddress?.country }}</p> -->
+        <p>{{ defaultBillingAddress?.country }}</p>
       </div>
       <mat-action-row>
         <button mat-button>Edit</button>
@@ -75,15 +79,14 @@
       </mat-expansion-panel-header>
       @for (address of currentCustomer().addresses; track address.id) {
         <mat-card>
-          <!-- @if (currentCustomer()?.defaultBillingAddressId) { -->
           <mat-card-header>
-            <mat-card-title>Default billing address</mat-card-title>
-            <!-- </mat-card-header> -->
-            <!-- } @else if (currentCustomer()?.defaultShippingAddressId) { -->
-            <!-- <mat-card-header> -->
-            <!-- <mat-card-subtitle>Default shipping address</mat-card-sutitle> -->
+            @if (address.id === defaultShippingAddress?.id) {
+              <mat-card-title>Default shipping address</mat-card-title>
+            }
+            @if (address.id === defaultBillingAddress?.id) {
+              <mat-card-title>Default billing address</mat-card-title>
+            }
           </mat-card-header>
-          <!-- } -->
 
           <mat-card-content>
             <p>Street:</p>
@@ -102,6 +105,7 @@
             <p>{{ address.country }}</p>
           </mat-card-content>
           <mat-card-actions align="end">
+            <button mat-button>Set as default</button>
             <button mat-button>Edit</button>
           </mat-card-actions>
         </mat-card>

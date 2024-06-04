@@ -8,6 +8,7 @@ import { StorageService } from '../../core/storage/storage.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { Address } from '../../core/models/customer';
 
 @Component({
   imports: [MatCardModule, MatButtonModule, MatExpansionModule],
@@ -26,12 +27,6 @@ export class ProfileComponent implements OnInit {
   currentCustomer = computed(() => {
     return this.storage.CurrentCustomer();
   });
-  // defaultShippingAddress = this.currentCustomer()?.addresses.find(
-  //   (address) => address.id === this.currentCustomer()?.defaultShippingAddressId,
-  // );
-  // defaultBillingAddress = this.customerData?.addresses.find(
-  //   (address) => address.id === this.customerData?.defaultBillingAddressId,
-  // );
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -42,6 +37,20 @@ export class ProfileComponent implements OnInit {
     private snackbarService: SnackbarService,
   ) {}
 
+  get defaultShippingAddress(): Address | undefined {
+    return this.currentCustomer().addresses.find(
+      (address) =>
+        address.id === this.currentCustomer().defaultShippingAddressId,
+    );
+  }
+
+  get defaultBillingAddress(): Address | undefined {
+    return this.currentCustomer().addresses.find(
+      (address) =>
+        address.id === this.currentCustomer().defaultBillingAddressId,
+    );
+  }
+
   // If user is not logged in, redirect to main page
   ngOnInit(): void {
     console.log('App token', localStorage.getItem('AppAccessToken'));
@@ -49,7 +58,6 @@ export class ProfileComponent implements OnInit {
       this.router.navigate(['/']);
     }
     const currentCustomerId = localStorage.getItem('userId') || '';
-
     this.getCustomerService.queryCustomer(currentCustomerId).subscribe({
       next: () => {
         this.snackbarService.show(
@@ -66,8 +74,6 @@ export class ProfileComponent implements OnInit {
         );
       },
     });
-
-    console.log(this.currentCustomer());
   }
 
   goBack(): void {
