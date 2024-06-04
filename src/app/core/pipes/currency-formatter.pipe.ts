@@ -8,10 +8,10 @@ export class CurrencyFormatterPipe implements PipeTransform {
   transform(
     centAmount: number,
     currencyCode: string,
-    fractionDigits: string,
+    fractionDigits: number,
   ): string {
-    const amount = Number(centAmount) / Math.pow(10, Number(fractionDigits));
-    const formattedAmount = amount.toFixed(Number(fractionDigits));
+    const amount = Number(centAmount) / Math.pow(10, fractionDigits);
+    const formattedAmount = amount.toFixed(fractionDigits);
     return `${formattedAmount} ${currencyCode.toUpperCase()}`;
   }
 }

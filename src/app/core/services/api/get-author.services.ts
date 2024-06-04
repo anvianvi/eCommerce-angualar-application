@@ -7,19 +7,16 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
-import { queryProductsResponse } from '../../models/products';
 import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
+import { queryAuthorsResponse } from '../../models/author';
+import { GetProductsService } from './get-products.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GetProductsService {
-  sortBy = signal('name.en');
-  sortOrder = signal('asc');
-  filterMinPrice = signal(0);
-  filterMaxPrice = signal(3000);
-  filterAuthorsList = signal<string[]>([]);
+export class GetAuthorService {
+  filterAuthor = signal(``);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('AppAccessToken') || '';
@@ -27,34 +24,29 @@ export class GetProductsService {
     private http: HttpClient,
     private snackbarService: SnackbarService,
     private storageService: StorageService,
+    private getProductsService: GetProductsService,
   ) {}
 
-  queryProducts(): Observable<queryProductsResponse> {
+  queryAuthors(): Observable<queryAuthorsResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
     });
 
-    const quotedAuthors = this.filterAuthorsList()
-      .map((author) => `"${author}"`)
-      .join(', ');
-
-    const params = new HttpParams()
-      .set(
-        'filter',
-        `variants.price.centAmount:range (${this.filterMinPrice()} to ${this.filterMaxPrice()})`,
-      )
-      .append('filter', `variants.attributes.author:${quotedAuthors}`)
-      .set('sort', `${this.sortBy()} ${this.sortOrder()}`);
+    const params = new HttpParams().set('facet', `variants.attributes.author`);
 
     return this.http
-      .get<queryProductsResponse>(`${this.apiUrl}/product-projections/search`, {
+      .get<queryAuthorsResponse>(`${this.apiUrl}/product-projections/search`, {
         headers,
         params,
       })
       .pipe(
         tap((responseData) => {
-          this.storageService.productsInStore.set(responseData.results);
+          const authors = responseData.facets[
+            'variants.attributes.author'
+          ].terms.map((term) => term.term);
+          this.storageService.authors.set(authors);
+          this.getProductsService.filterAuthorsList.set(authors);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

@@ -32,6 +32,10 @@ export class HeaderComponent {
     private router: Router,
   ) {}
 
+  toCatalog(): void {
+    this.router.navigate(['/']);
+  }
+
   toLogin(): void {
     this.router.navigate(['/login']);
   }
