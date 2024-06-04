@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { StorageService } from '../core/storage/storage.service';
 
 @Component({
   imports: [],
@@ -15,12 +16,18 @@ import { ActivatedRoute } from '@angular/router';
 export class DetailedProductInformationComponent implements OnInit {
   productId = '';
 
+  products = computed(() => {
+    return this.storageService.productsInStore();
+  });
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
+    private storageService: StorageService,
   ) {}
 
   ngOnInit(): void {
+    console.log(this.products());
     this.productId = this.route.snapshot.paramMap.get('id') || '';
   }
 
