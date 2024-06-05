@@ -3,7 +3,7 @@
   <mat-accordion multi>
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
-        <mat-panel-title> Basic information </mat-panel-title>
+        <mat-panel-title> Login information </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         <p>Email address:</p>
@@ -11,8 +11,16 @@
       </div>
       <div>
         <p>Password:</p>
-        <p>{{ "*".repeat(currentCustomer().password.length) }}</p>
+        <p>**********</p>
       </div>
+      <mat-action-row>
+        <button mat-button>Edit</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Basic information </mat-panel-title>
+      </mat-expansion-panel-header>
       <div>
         <p>Name:</p>
         <p>{{ currentCustomer().firstName }}</p>
@@ -26,7 +34,7 @@
         <p>{{ currentCustomer().dateOfBirth }}</p>
       </div>
       <mat-action-row>
-        <button mat-button>Edit</button>
+        <button mat-button (click)="editBasicInfo()">Edit</button>
       </mat-action-row>
     </mat-expansion-panel>
     <mat-expansion-panel
@@ -112,7 +120,9 @@
           </mat-card-actions>
         </mat-card>
       }
-      <div></div>
+      <mat-action-row>
+        <button mat-button>Add new address</button>
+      </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
   <button mat-button (click)="goBack()">Back</button>
