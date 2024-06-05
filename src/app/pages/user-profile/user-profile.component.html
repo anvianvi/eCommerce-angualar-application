@@ -6,6 +6,14 @@
         <mat-panel-title> Basic information </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
+        <p>Email address:</p>
+        <p>{{ currentCustomer().email }}</p>
+      </div>
+      <div>
+        <p>Password:</p>
+        <p>{{ "*".repeat(currentCustomer().password.length) }}</p>
+      </div>
+      <div>
         <p>Name:</p>
         <p>{{ currentCustomer().firstName }}</p>
       </div>
@@ -43,9 +51,6 @@
         <p>Country:</p>
         <p>{{ defaultShippingAddress?.country }}</p>
       </div>
-      <mat-action-row>
-        <button mat-button>Edit</button>
-      </mat-action-row>
     </mat-expansion-panel>
     <mat-expansion-panel
       [disabled]="!currentCustomer().defaultBillingAddressId"
@@ -69,9 +74,6 @@
         <p>Country:</p>
         <p>{{ defaultBillingAddress?.country }}</p>
       </div>
-      <mat-action-row>
-        <button mat-button>Edit</button>
-      </mat-action-row>
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
