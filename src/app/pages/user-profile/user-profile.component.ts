@@ -8,7 +8,9 @@ import { StorageService } from '../../core/storage/storage.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialog } from '@angular/material/dialog';
 import { Address } from '../../core/models/customer';
+import { EditUserProfileModalComponent } from '../../components/header/edit-user-profile-modal/edit-user-profile-modal.component';
 
 @Component({
   imports: [MatCardModule, MatButtonModule, MatExpansionModule],
@@ -35,6 +37,7 @@ export class ProfileComponent implements OnInit {
     private getCustomerService: GetCustomerService,
     private storage: StorageService,
     private snackbarService: SnackbarService,
+    private dialog: MatDialog,
   ) {}
 
   get defaultShippingAddress(): Address | undefined {
@@ -57,12 +60,13 @@ export class ProfileComponent implements OnInit {
     }
     const currentCustomerId = localStorage.getItem('userId') || '';
     this.getCustomerService.queryCustomer(currentCustomerId).subscribe({
-      next: () => {
+      next: (response) => {
         this.snackbarService.show(
           'Customer data fetched successfully',
           'Ok',
           2000,
         );
+        console.log(response);
       },
       error: (err) => {
         this.snackbarService.show(
@@ -76,5 +80,13 @@ export class ProfileComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  editBasicInfo(): void {
+    this.dialog.open(EditUserProfileModalComponent, {
+      width: '50vw',
+      height: '70vh',
+      data: this.currentCustomer(),
+    });
   }
 }
