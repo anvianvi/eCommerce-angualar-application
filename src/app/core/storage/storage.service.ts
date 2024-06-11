@@ -12,4 +12,5 @@ export class StorageService {
   productDiscounts = signal<Discount[] | []>([]);
   currentCustomer = signal<Customer>(emptyCustomer);
   authors = signal<string[]>([]);
+  cartItemsCount = signal(0);
 }
