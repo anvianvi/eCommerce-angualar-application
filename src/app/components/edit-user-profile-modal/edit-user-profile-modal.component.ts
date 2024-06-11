@@ -5,14 +5,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButton } from '@angular/material/button';
-import { SnackbarService } from '../../../core/services/mat-snackbar.service';
+import { SnackbarService } from '../../core/services/mat-snackbar.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { Customer } from '../../../core/models/customer';
+import { Customer } from '../../core/models/customer';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CustomValidatorsService } from '../../../core/services/custom-validators.service';
-import { FormatDataService } from '../../../core/services/format-date.service';
-import { updateBody } from '../../../core/services/api/get-customer.service';
-import { environment } from '../../../environment/environment';
+import { CustomValidatorsService } from '../../core/services/custom-validators.service';
+import { FormatDataService } from '../../core/services/format-date.service';
+import { updateBody } from '../../core/services/api/get-customer.service';
+import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -61,7 +61,6 @@ export class EditUserProfileModalComponent {
         ],
       ],
     });
-    // Disable save button if user didn't change value
     this.editUserProfileForm.valueChanges.subscribe(() => {
       const firstNameControl = this.editUserProfileForm.get('firstName');
       const lastNameControl = this.editUserProfileForm.get('lastName');
@@ -116,7 +115,6 @@ export class EditUserProfileModalComponent {
   }
 
   onCancel(): void {
-    // Reset the form to its initial state
     this.editUserProfileForm.reset({
       firstName: this.data?.firstName || '',
       lastName: this.data?.lastName || '',
@@ -142,7 +140,6 @@ export class EditUserProfileModalComponent {
       )
       .subscribe(() => {
         this.snackbarService.show('Successfully updated data', 'Close', 3000);
-        // Reload page
         window.location.reload();
       });
   }

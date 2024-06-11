@@ -7,9 +7,10 @@ import { CarouselComponent } from '../components/img-carusel/carousel.component'
 import { StorageService } from '../core/storage/storage.service';
 import { LocalSettingsService } from '../core/services/local-settings.service';
 import { MatButtonModule } from '@angular/material/button';
+import { ProductPriceBarComponent } from '../components/price-block.component';
 
 @Component({
-  imports: [MatButtonModule, CarouselComponent],
+  imports: [MatButtonModule, CarouselComponent, ProductPriceBarComponent],
   standalone: true,
   selector: 'app-detailed-product-information',
   template: `<div class="page-conteiner">
@@ -23,6 +24,9 @@ import { MatButtonModule } from '@angular/material/button';
     <p class="description">
       {{ this.currentProduct().description[currentLocation()] }}
     </p>
+    <app-product-price-bar
+      [product]="this.currentProduct()"
+    ></app-product-price-bar>
     <app-carousel></app-carousel>
     <button mat-raised-button color="primary" (click)="goBack()">
       Go Back
