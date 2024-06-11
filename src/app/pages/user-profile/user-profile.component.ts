@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
 import { Address } from '../../core/models/customer';
-import { EditUserProfileModalComponent } from '../../components/header/edit-user-profile-modal/edit-user-profile-modal.component';
+import { EditUserProfileModalComponent } from '../../components/edit-user-profile-modal/edit-user-profile-modal.component';
 
 @Component({
   imports: [MatCardModule, MatButtonModule, MatExpansionModule],
@@ -60,13 +60,12 @@ export class ProfileComponent implements OnInit {
     }
     const currentCustomerId = localStorage.getItem('userId') || '';
     this.getCustomerService.queryCustomer(currentCustomerId).subscribe({
-      next: (response) => {
+      next: () => {
         this.snackbarService.show(
           'Customer data fetched successfully',
           'Ok',
           2000,
         );
-        console.log(response);
       },
       error: (err) => {
         this.snackbarService.show(

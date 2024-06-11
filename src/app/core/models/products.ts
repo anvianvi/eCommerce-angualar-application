@@ -15,6 +15,8 @@ export type Product = {
     id: number;
     sku: string;
     key: string;
+    attributes: Attribute[];
+
     prices: Array<{
       id: string;
       value: {
@@ -58,10 +60,50 @@ export type Product = {
   version: number;
 };
 
+type Attribute = {
+  name: string;
+  value: string;
+};
+
 export type queryProductsResponse = {
   limit: number;
   offset: number;
   count: number;
   total: number;
   results: Product[];
+};
+
+export const emptyProduct: Product = {
+  categories: [],
+  categoryOrderHints: {},
+  createdAt: '',
+  description: {},
+  hasStagedChanges: false,
+  id: '',
+  lastModifiedAt: '',
+  masterVariant: {
+    id: 0,
+    sku: '',
+    key: '',
+    prices: [],
+    images: [],
+    attributes: [{ name: '', value: '' }],
+  },
+  metaDescription: {},
+  metaTitle: {},
+  name: {},
+  priceMode: '',
+  productType: {
+    typeId: '',
+    id: '',
+  },
+  published: false,
+  searchKeywords: {},
+  slug: {},
+  taxCategory: {
+    typeId: '',
+    id: '',
+  },
+  variants: [],
+  version: 0,
 };
