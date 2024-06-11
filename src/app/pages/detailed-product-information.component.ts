@@ -68,14 +68,14 @@ export class DetailedProductInformationComponent implements OnInit {
     this.getProductService.queryProduct(this.productId).subscribe({
       next: () => {
         this.snackbarService.show(
-          'Product fetched successfully detailes',
+          'Product details fetched successfully ',
           'Ok',
           2000,
         );
       },
       error: (err) => {
         this.snackbarService.show(
-          `Failed to fetch Product detailes, ${err}`,
+          `Failed to fetch Product details, ${err}`,
           'Ok',
           2000,
         );
