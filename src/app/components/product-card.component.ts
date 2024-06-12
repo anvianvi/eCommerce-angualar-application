@@ -3,6 +3,7 @@ import { Product } from '../core/models/products';
 import { LocalSettingsService } from '../core/services/local-settings.service';
 import { Router } from '@angular/router';
 import { ProductPriceBarComponent } from './price-block.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   standalone: true,
@@ -24,6 +25,11 @@ import { ProductPriceBarComponent } from './price-block.component';
         <p class="description">
           {{ product.description[currentLocation()] }}
         </p>
+        <div class="product-card-btn-container">
+          <button mat-flat-button color="primary" (click)="addToCart($event)">
+            Add to Cart 🛒
+          </button>
+        </div>
       </div>
     </div>
   `,
@@ -93,8 +99,14 @@ import { ProductPriceBarComponent } from './price-block.component';
         }
       }
     }
+
+    .product-card-btn-container {
+      display: flex;
+      justify-content: end;
+      padding: 10px;
+    }
   `,
-  imports: [ProductPriceBarComponent],
+  imports: [ProductPriceBarComponent, MatButtonModule],
 })
 export class ProductCardComponent {
   @Input() product!: Product;
@@ -110,5 +122,11 @@ export class ProductCardComponent {
 
   openDetailedProductPage(): void {
     this.router.navigate([`/product/${this.product.id}`]);
+  }
+
+  addToCart(event: Event): void {
+    event.stopPropagation();
+    console.log('Add to cart button clicked');
+    console.log(`add item id: ${this.product.id} to cart`);
   }
 }

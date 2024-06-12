@@ -28,9 +28,12 @@ import { ProductPriceBarComponent } from '../components/price-block.component';
       [product]="this.currentProduct()"
     ></app-product-price-bar>
     <app-carousel></app-carousel>
-    <button mat-raised-button color="primary" (click)="goBack()">
-      Go Back
-    </button>
+    <div class="detailed-product-btn-container">
+      <button mat-raised-button color="warn" (click)="goBack()">Go Back</button>
+      <button mat-flat-button color="primary" (click)="addToCart($event)">
+        Add to Cart 🛒
+      </button>
+    </div>
   </div>`,
   styles: `
     .page-conteiner {
@@ -41,6 +44,11 @@ import { ProductPriceBarComponent } from '../components/price-block.component';
       padding-block: 20px;
       max-width: 500px;
       margin-inline: auto;
+    }
+    .detailed-product-btn-container {
+      display: flex;
+      justify-content: space-between;
+      width: 330px;
     }
   `,
 })
@@ -85,5 +93,11 @@ export class DetailedProductInformationComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  addToCart(event: Event): void {
+    event.stopPropagation();
+    console.log('Add to cart button clicked');
+    console.log(`add item id: ${this.productId} to cart`);
   }
 }
