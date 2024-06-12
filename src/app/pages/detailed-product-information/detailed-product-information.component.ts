@@ -26,7 +26,7 @@ export class DetailedProductInformationComponent implements OnInit {
   ngOnInit(): void {
     this.productId = this.route.snapshot.paramMap.get('id') || '';
     this.getProductService
-      .queryProducts(this.productId)
+      .queryProduct(this.productId)
       .subscribe((response) => {
         this.product = response;
       });
