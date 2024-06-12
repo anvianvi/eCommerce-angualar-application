@@ -43,4 +43,8 @@ export class HeaderComponent {
   toRegistration(): void {
     this.router.navigate(['/registration']);
   }
+
+  toBasket(): void {
+    this.router.navigate(['/basket']);
+  }
 }
