@@ -30,7 +30,7 @@ export const routes: Routes = [
     component: AboutUsComponent,
   },
   {
-    path: 'backet',
+    path: 'basket',
     component: BasketComponent,
   },
   { path: 'product/:id', component: DetailedProductInformationComponent },

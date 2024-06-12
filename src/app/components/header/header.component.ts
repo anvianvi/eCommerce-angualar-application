@@ -39,7 +39,7 @@ import { MatBadgeModule } from '@angular/material/badge';
         <button mat-button routerLink="/registration">registration</button>
       }
 
-      <button mat-button routerLink="/backet">
+      <button mat-button routerLink="/basket">
         <span
           style="font-size: 26px;"
           matBadge="{{ this.cartItemsCount() }}"
