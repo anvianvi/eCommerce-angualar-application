@@ -1,0 +1,20 @@
+<main>
+  <div class="product">
+    <div class="img-container">
+      <img
+        class="photo"
+        [src]="product.masterVariant.images[0].url"
+        [alt]="'photo of ' + product.name['en']"
+      />
+    </div>
+    <div>
+      <h1>{{ product.name["en"] }}</h1>
+      <app-product-price-bar [product]="product"></app-product-price-bar>
+      <h2>{{ product.description["en"] }}</h2>
+    </div>
+  </div>
+  <div class="buttons-container">
+    <button mat-button (click)="goBack()">Back</button>
+    <button mat-button (click)="addToBasket()">Add to basket</button>
+  </div>
+</main>

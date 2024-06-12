@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -40,11 +39,11 @@ export class EditUserProfileModalComponent {
     private customValidators: CustomValidatorsService,
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
-    private router: Router,
     public dialogRef: MatDialogRef<EditUserProfileModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Customer,
   ) {
     this.editUserProfileForm = this.fb.group({
+      email: [data.email, [Validators.required, Validators.email]],
       firstName: [
         data.firstName,
         [Validators.required, Validators.pattern('[a-zA-Z]+')],
@@ -62,10 +61,14 @@ export class EditUserProfileModalComponent {
       ],
     });
     this.editUserProfileForm.valueChanges.subscribe(() => {
+      const emailControl = this.editUserProfileForm.get('email');
       const firstNameControl = this.editUserProfileForm.get('firstName');
       const lastNameControl = this.editUserProfileForm.get('lastName');
       const dateOfBirthControl = this.editUserProfileForm.get('dateOfBirth');
       if (
+        (emailControl &&
+          emailControl.dirty &&
+          emailControl.value !== data?.email) ||
         (firstNameControl &&
           firstNameControl.dirty &&
           firstNameControl.value !== data?.firstName) ||
@@ -84,6 +87,7 @@ export class EditUserProfileModalComponent {
   }
 
   createRequestBody(): updateBody {
+    const newEmail = this.editUserProfileForm.value.email;
     const newFirstName = this.editUserProfileForm.value.firstName;
     const newLastName = this.editUserProfileForm.value.lastName;
     const newDateOfBirth = this.formatData.getFormattedDateOfBirth(
@@ -93,6 +97,12 @@ export class EditUserProfileModalComponent {
       version: this.data.version,
       actions: [],
     };
+    if (newEmail !== this.data.email) {
+      body.actions.push({
+        action: 'changeEmail',
+        email: newEmail,
+      });
+    }
     if (newFirstName !== this.data.firstName) {
       body.actions.push({
         action: 'setFirstName',
@@ -116,9 +126,10 @@ export class EditUserProfileModalComponent {
 
   onCancel(): void {
     this.editUserProfileForm.reset({
-      firstName: this.data?.firstName || '',
-      lastName: this.data?.lastName || '',
-      dateOfBirth: this.data?.dateOfBirth || '',
+      email: this.data.email || '',
+      firstName: this.data.firstName || '',
+      lastName: this.data.lastName || '',
+      dateOfBirth: this.data.dateOfBirth || '',
     });
     this.isFormChanged = false;
     this.dialogRef.close();
