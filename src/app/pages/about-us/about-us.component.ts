@@ -16,7 +16,7 @@ import { teamList } from './team-members-data';
               <mat-card-title>{{ member.name }}</mat-card-title>
               <mat-card-subtitle>{{ member.title }}</mat-card-subtitle>
             </mat-card-header>
-            <div class="profile-awatar">
+            <div class="profile-avatar">
               <img mat-card-image [src]="member.photo" alt="avatar" />
             </div>
             <mat-card-content>
@@ -26,7 +26,7 @@ import { teamList } from './team-members-data';
               <a mat-button href="{{ member.github }}" target="_blank"
                 ><img
                   src="assets/github-mark.svg"
-                  alt="github logotip"
+                  alt="github logo"
                   style="height: 20px;"
                 />
                 {{ member.githubName }}</a
@@ -38,7 +38,7 @@ import { teamList } from './team-members-data';
 
       <div class="rs-link-container">
         This project created as part of studying at
-        <a href="https://rs.school/" ariaCurrentWhenActive="page">
+        <a href="https://rs.school/" target="_blank">
           <img
             class="logo"
             src="assets/logo.svg"
@@ -77,7 +77,7 @@ import { teamList } from './team-members-data';
       text-align: center;
     }
 
-    .profile-awatar {
+    .profile-avatar {
       width: 200px;
       height: 200px;
       border-radius: 50%;
