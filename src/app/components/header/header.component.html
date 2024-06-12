@@ -11,7 +11,7 @@
   </div>
   <div class="buttons-container">
     <button mat-button (click)="toCatalog()">catalog</button>
-
+    <button mat-button (click)="toBasket()">Basket</button>
     @if (isAuthenticated()) {
       <app-profile-status-bar></app-profile-status-bar>
     } @else {
