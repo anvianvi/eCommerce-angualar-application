@@ -1,5 +1,9 @@
+interface DialogData {
+  customer: Customer;
+  section: string;
+}
+
 import { Component, Inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -40,21 +44,20 @@ export class EditUserProfileModalComponent {
     private customValidators: CustomValidatorsService,
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
-    private router: Router,
     public dialogRef: MatDialogRef<EditUserProfileModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Customer,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
   ) {
     this.editUserProfileForm = this.fb.group({
       firstName: [
-        data.firstName,
+        data.customer.firstName,
         [Validators.required, Validators.pattern('[a-zA-Z]+')],
       ],
       lastName: [
-        data.lastName,
+        data.customer.lastName,
         [Validators.required, Validators.pattern('[a-zA-Z]+')],
       ],
       dateOfBirth: [
-        data.dateOfBirth,
+        data.customer.dateOfBirth,
         [
           Validators.required,
           this.customValidators.dateOfBirthValidator.bind(this),
@@ -69,13 +72,13 @@ export class EditUserProfileModalComponent {
       if (
         (firstNameControl &&
           firstNameControl.dirty &&
-          firstNameControl.value !== data?.firstName) ||
+          firstNameControl.value !== data?.customer.firstName) ||
         (lastNameControl &&
           lastNameControl.dirty &&
-          lastNameControl.value !== data?.lastName) ||
+          lastNameControl.value !== data?.customer.lastName) ||
         (dateOfBirthControl &&
           dateOfBirthControl.dirty &&
-          dateOfBirthControl.value !== data?.dateOfBirth)
+          dateOfBirthControl.value !== data?.customer.dateOfBirth)
       ) {
         this.isFormChanged = true;
       } else {
@@ -91,22 +94,22 @@ export class EditUserProfileModalComponent {
       this.editUserProfileForm.get('dateOfBirth')?.value,
     );
     const body: updateBody = {
-      version: this.data.version,
+      version: this.data.customer.version,
       actions: [],
     };
-    if (newFirstName !== this.data.firstName) {
+    if (newFirstName !== this.data.customer.firstName) {
       body.actions.push({
         action: 'setFirstName',
         firstName: newFirstName,
       });
     }
-    if (newLastName !== this.data.lastName) {
+    if (newLastName !== this.data.customer.lastName) {
       body.actions.push({
         action: 'setLastName',
         lastName: newLastName,
       });
     }
-    if (newDateOfBirth !== this.data.dateOfBirth) {
+    if (newDateOfBirth !== this.data.customer.dateOfBirth) {
       body.actions.push({
         action: 'setDateOfBirth',
         dateOfBirth: newDateOfBirth,
@@ -118,9 +121,9 @@ export class EditUserProfileModalComponent {
   onCancel(): void {
     // Reset the form to its initial state
     this.editUserProfileForm.reset({
-      firstName: this.data?.firstName || '',
-      lastName: this.data?.lastName || '',
-      dateOfBirth: this.data?.dateOfBirth || '',
+      firstName: this.data?.customer.firstName || '',
+      lastName: this.data?.customer.lastName || '',
+      dateOfBirth: this.data?.customer.dateOfBirth || '',
     });
     this.isFormChanged = false;
     this.dialogRef.close();
@@ -134,7 +137,7 @@ export class EditUserProfileModalComponent {
 
     this.http
       .post<Customer>(
-        `${this.apiUrl}/customers/${this.data.id}`,
+        `${this.apiUrl}/customers/${this.data.customer.id}`,
         this.createRequestBody(),
         {
           headers,

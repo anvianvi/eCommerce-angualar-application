@@ -86,7 +86,9 @@ export class ProfileComponent implements OnInit {
     this.dialog.open(EditUserProfileModalComponent, {
       width: '50vw',
       height: '70vh',
-      data: this.currentCustomer(),
+      data: {
+        customer: this.currentCustomer(),
+      },
     });
   }
 }
