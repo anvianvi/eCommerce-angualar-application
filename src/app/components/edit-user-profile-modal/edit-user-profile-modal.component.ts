@@ -60,7 +60,6 @@ export class EditUserProfileModalComponent {
         ],
       ],
     });
-    // Disable save button if user didn't change value
     this.editUserProfileForm.valueChanges.subscribe(() => {
       const emailControl = this.editUserProfileForm.get('email');
       const firstNameControl = this.editUserProfileForm.get('firstName');
@@ -126,7 +125,6 @@ export class EditUserProfileModalComponent {
   }
 
   onCancel(): void {
-    // Reset the form to its initial state
     this.editUserProfileForm.reset({
       email: this.data.email || '',
       firstName: this.data.firstName || '',
@@ -153,7 +151,6 @@ export class EditUserProfileModalComponent {
       )
       .subscribe(() => {
         this.snackbarService.show('Successfully updated data', 'Close', 3000);
-        // Reload page
         window.location.reload();
       });
   }

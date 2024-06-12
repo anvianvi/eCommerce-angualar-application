@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './basket.component.html',
-  styleUrl: './basket.component.scss'
+  styleUrl: './basket.component.scss',
 })
-export class BasketComponent {
-
-}
+export class BasketComponent {}

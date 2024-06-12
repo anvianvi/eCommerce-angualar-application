@@ -22,7 +22,7 @@ export class GetProductService {
     private storageService: StorageService,
   ) {}
 
-  queryProducts(productId: string): Observable<Product> {
+  queryProduct(productId: string): Observable<Product> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
@@ -34,7 +34,7 @@ export class GetProductService {
       })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
+          this.storageService.currentProduct.set(responseData);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
