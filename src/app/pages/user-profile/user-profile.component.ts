@@ -10,7 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
 import { Address } from '../../core/models/customer';
-import { EditUserProfileModalComponent } from '../../components/header/edit-user-profile-modal/edit-user-profile-modal.component';
+import { EditUserProfileModalComponent } from '../../components/edit-user-profile-modal/edit-user-profile-modal.component';
+import { EditPasswordModalComponent } from '../../components/edit-password-modal/edit-password-modal.component';
 
 @Component({
   imports: [MatCardModule, MatButtonModule, MatExpansionModule],
@@ -60,13 +61,12 @@ export class ProfileComponent implements OnInit {
     }
     const currentCustomerId = localStorage.getItem('userId') || '';
     this.getCustomerService.queryCustomer(currentCustomerId).subscribe({
-      next: (response) => {
+      next: () => {
         this.snackbarService.show(
           'Customer data fetched successfully',
           'Ok',
           2000,
         );
-        console.log(response);
       },
       error: (err) => {
         this.snackbarService.show(
@@ -86,9 +86,15 @@ export class ProfileComponent implements OnInit {
     this.dialog.open(EditUserProfileModalComponent, {
       width: '50vw',
       height: '70vh',
-      data: {
-        customer: this.currentCustomer(),
-      },
+      data: this.currentCustomer(),
+    });
+  }
+
+  changePassword(): void {
+    this.dialog.open(EditPasswordModalComponent, {
+      width: '50vw',
+      height: '70vh',
+      data: this.currentCustomer(),
     });
   }
 }

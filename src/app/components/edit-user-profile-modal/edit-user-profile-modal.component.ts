@@ -1,22 +1,17 @@
-interface DialogData {
-  customer: Customer;
-  section: string;
-}
-
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButton } from '@angular/material/button';
-import { SnackbarService } from '../../../core/services/mat-snackbar.service';
+import { SnackbarService } from '../../core/services/mat-snackbar.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { Customer } from '../../../core/models/customer';
+import { Customer } from '../../core/models/customer';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CustomValidatorsService } from '../../../core/services/custom-validators.service';
-import { FormatDataService } from '../../../core/services/format-date.service';
-import { updateBody } from '../../../core/services/api/get-customer.service';
-import { environment } from '../../../environment/environment';
+import { CustomValidatorsService } from '../../core/services/custom-validators.service';
+import { FormatDataService } from '../../core/services/format-date.service';
+import { updateBody } from '../../core/services/api/get-customer.service';
+import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -45,19 +40,20 @@ export class EditUserProfileModalComponent {
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
     public dialogRef: MatDialogRef<EditUserProfileModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: Customer,
   ) {
     this.editUserProfileForm = this.fb.group({
+      email: [data.email, [Validators.required, Validators.email]],
       firstName: [
-        data.customer.firstName,
+        data.firstName,
         [Validators.required, Validators.pattern('[a-zA-Z]+')],
       ],
       lastName: [
-        data.customer.lastName,
+        data.lastName,
         [Validators.required, Validators.pattern('[a-zA-Z]+')],
       ],
       dateOfBirth: [
-        data.customer.dateOfBirth,
+        data.dateOfBirth,
         [
           Validators.required,
           this.customValidators.dateOfBirthValidator.bind(this),
@@ -66,19 +62,23 @@ export class EditUserProfileModalComponent {
     });
     // Disable save button if user didn't change value
     this.editUserProfileForm.valueChanges.subscribe(() => {
+      const emailControl = this.editUserProfileForm.get('email');
       const firstNameControl = this.editUserProfileForm.get('firstName');
       const lastNameControl = this.editUserProfileForm.get('lastName');
       const dateOfBirthControl = this.editUserProfileForm.get('dateOfBirth');
       if (
+        (emailControl &&
+          emailControl.dirty &&
+          emailControl.value !== data?.email) ||
         (firstNameControl &&
           firstNameControl.dirty &&
-          firstNameControl.value !== data?.customer.firstName) ||
+          firstNameControl.value !== data?.firstName) ||
         (lastNameControl &&
           lastNameControl.dirty &&
-          lastNameControl.value !== data?.customer.lastName) ||
+          lastNameControl.value !== data?.lastName) ||
         (dateOfBirthControl &&
           dateOfBirthControl.dirty &&
-          dateOfBirthControl.value !== data?.customer.dateOfBirth)
+          dateOfBirthControl.value !== data?.dateOfBirth)
       ) {
         this.isFormChanged = true;
       } else {
@@ -88,28 +88,35 @@ export class EditUserProfileModalComponent {
   }
 
   createRequestBody(): updateBody {
+    const newEmail = this.editUserProfileForm.value.email;
     const newFirstName = this.editUserProfileForm.value.firstName;
     const newLastName = this.editUserProfileForm.value.lastName;
     const newDateOfBirth = this.formatData.getFormattedDateOfBirth(
       this.editUserProfileForm.get('dateOfBirth')?.value,
     );
     const body: updateBody = {
-      version: this.data.customer.version,
+      version: this.data.version,
       actions: [],
     };
-    if (newFirstName !== this.data.customer.firstName) {
+    if (newEmail !== this.data.email) {
+      body.actions.push({
+        action: 'changeEmail',
+        email: newEmail,
+      });
+    }
+    if (newFirstName !== this.data.firstName) {
       body.actions.push({
         action: 'setFirstName',
         firstName: newFirstName,
       });
     }
-    if (newLastName !== this.data.customer.lastName) {
+    if (newLastName !== this.data.lastName) {
       body.actions.push({
         action: 'setLastName',
         lastName: newLastName,
       });
     }
-    if (newDateOfBirth !== this.data.customer.dateOfBirth) {
+    if (newDateOfBirth !== this.data.dateOfBirth) {
       body.actions.push({
         action: 'setDateOfBirth',
         dateOfBirth: newDateOfBirth,
@@ -121,9 +128,10 @@ export class EditUserProfileModalComponent {
   onCancel(): void {
     // Reset the form to its initial state
     this.editUserProfileForm.reset({
-      firstName: this.data?.customer.firstName || '',
-      lastName: this.data?.customer.lastName || '',
-      dateOfBirth: this.data?.customer.dateOfBirth || '',
+      email: this.data.email || '',
+      firstName: this.data.firstName || '',
+      lastName: this.data.lastName || '',
+      dateOfBirth: this.data.dateOfBirth || '',
     });
     this.isFormChanged = false;
     this.dialogRef.close();
@@ -137,7 +145,7 @@ export class EditUserProfileModalComponent {
 
     this.http
       .post<Customer>(
-        `${this.apiUrl}/customers/${this.data.customer.id}`,
+        `${this.apiUrl}/customers/${this.data.id}`,
         this.createRequestBody(),
         {
           headers,

@@ -3,24 +3,12 @@
   <mat-accordion multi>
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
-        <mat-panel-title> Login information </mat-panel-title>
+        <mat-panel-title> Basic information </mat-panel-title>
       </mat-expansion-panel-header>
       <div>
         <p>Email address:</p>
         <p>{{ currentCustomer().email }}</p>
       </div>
-      <div>
-        <p>Password:</p>
-        <p>**********</p>
-      </div>
-      <mat-action-row>
-        <button mat-button>Edit</button>
-      </mat-action-row>
-    </mat-expansion-panel>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title> Basic information </mat-panel-title>
-      </mat-expansion-panel-header>
       <div>
         <p>Name:</p>
         <p>{{ currentCustomer().firstName }}</p>
@@ -35,6 +23,7 @@
       </div>
       <mat-action-row>
         <button mat-button (click)="editBasicInfo()">Edit</button>
+        <button mat-button (click)="changePassword()">Change password</button>
       </mat-action-row>
     </mat-expansion-panel>
     <mat-expansion-panel>
