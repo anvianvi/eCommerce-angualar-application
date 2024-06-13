@@ -18,7 +18,8 @@ import { Customer } from '../../core/models/customer';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CustomValidatorsService } from '../../core/services/custom-validators.service';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaderService } from '../../core/services/api/http-headers.service';
 
 @Component({
   selector: 'app-edit-password-modal',
@@ -47,6 +48,7 @@ export class EditPasswordModalComponent {
     private http: HttpClient,
     private customValidators: CustomValidatorsService,
     private snackbarService: SnackbarService,
+    private headerService: HttpHeaderService,
     public dialogRef: MatDialogRef<EditPasswordModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Customer,
   ) {
@@ -88,10 +90,7 @@ export class EditPasswordModalComponent {
   }
 
   onSave(): void {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     this.http
       .post<Customer>(
