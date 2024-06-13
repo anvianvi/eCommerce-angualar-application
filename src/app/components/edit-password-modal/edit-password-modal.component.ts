@@ -41,7 +41,6 @@ export class EditPasswordModalComponent {
   hideCurrentpassword = true;
   hideNewPassword = true;
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken') || '';
 
   constructor(
     private fb: FormBuilder,
@@ -106,8 +105,7 @@ export class EditPasswordModalComponent {
           'Close',
           3000,
         );
-        // Reload page
-        window.location.reload();
+        this.onCancel();
       });
   }
 }

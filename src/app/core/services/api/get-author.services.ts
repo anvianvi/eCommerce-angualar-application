@@ -3,7 +3,6 @@ import { SnackbarService } from '../mat-snackbar.service';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
@@ -11,27 +10,25 @@ import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
 import { queryAuthorsResponse } from '../../models/author';
 import { GetProductsService } from './get-products.service';
+import { HttpHeaderService } from './http-headers.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetAuthorService {
   filterAuthor = signal(``);
-
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken') || '';
+
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
     private storageService: StorageService,
     private getProductsService: GetProductsService,
+    private headerService: HttpHeaderService,
   ) {}
 
   queryAuthors(): Observable<queryAuthorsResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     const params = new HttpParams().set('facet', `variants.attributes.author`);
 
