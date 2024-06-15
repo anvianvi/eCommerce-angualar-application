@@ -150,8 +150,6 @@ export class ProductCardComponent implements OnInit {
 
   addToCart(event: Event): void {
     event.stopPropagation();
-    console.log('Add to cart button clicked');
-    console.log(`add item id: ${this.product.id} to cart`);
     this.basketService.addItemToMyCart(this.product.id).subscribe();
     this.isItemInBasket.set(this.findItemInBasket());
   }

@@ -46,20 +46,16 @@ type Attribute = {
 
 export type LineItem = {
   addedAt: string;
-  // discountedPricePerQuantity: any[];
   id: string;
   lastModifiedAt: string;
   lineItemMode: string;
   name: Name;
-  // perMethodTaxRate: any[];
   price: Price;
   priceMode: string;
   productId: string;
   productSlug: ProductSlug;
   productType: ProductType;
   quantity: number;
-  // state: any[];
-  // taxedPricePortions: any[];
   totalPrice: TotalPrice;
   variant: Variant;
   origin: string;

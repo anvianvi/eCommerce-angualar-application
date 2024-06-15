@@ -15,18 +15,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     RouterOutlet,
     RouterLink,
   ],
-  template: `<button
-      mat-flat-button
-      color="primary"
-      (click)="getMyActiveCart()"
-    >
-      get Cart
-    </button>
-    <button mat-flat-button color="primary" (click)="createmycart()">
-      createmycart
-    </button>
-
-    <div class="products-container">
+  template: ` <div class="products-container">
       <table>
         @if (cart().lineItems.length > 0) {
           <thead>
@@ -106,8 +95,6 @@ export class BasketComponent implements OnInit {
 
   ngOnInit(): void {
     this.basketService.getBasket();
-    console.log('init');
-    console.log(this.cart());
   }
 
   removeItemFromCart(productId: string): void {
@@ -116,23 +103,5 @@ export class BasketComponent implements OnInit {
 
   clearBasket(): void {
     this.basketService.clearMyCart().subscribe();
-  }
-  getMyActiveCart(): void {
-    console.log('test fetch');
-    this.basketService.getMyActiveCart().subscribe({
-      next: () => {},
-      error: (err) => {
-        console.log(err);
-      },
-    });
-  }
-  createmycart(): void {
-    console.log('test fetch');
-    this.basketService.createMyCart().subscribe({
-      next: () => {},
-      error: (err) => {
-        console.log(err);
-      },
-    });
   }
 }

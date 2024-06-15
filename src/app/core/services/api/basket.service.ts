@@ -35,7 +35,11 @@ export class BasketService {
       error: () => {
         this.createMyCart().subscribe({
           next: () => {
-            this.snackbarService.show('Basket creted successfully', 'Ok', 2000);
+            this.snackbarService.show(
+              'Basket created successfully',
+              'Ok',
+              2000,
+            );
           },
         });
       },
