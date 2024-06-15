@@ -8,9 +8,8 @@ import {
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
-import { queryAuthorsResponse } from '../../models/author';
 import { GetProductsService } from './get-products.service';
-import { CustomerResponse } from '../../interfaces/interfaces';
+import { Cart } from '../../models/cart';
 
 @Injectable({
   providedIn: 'root',
@@ -25,19 +24,40 @@ export class BasketService {
     private getProductsService: GetProductsService,
   ) {}
 
-  getMyActiveCart(): Observable<queryAuthorsResponse> {
+  getBasket(): void {
+    this.getMyActiveCart().subscribe({
+      next: () => {
+        this.snackbarService.show('Basket fetched successfully', 'Ok', 2000);
+      },
+      error: (err) => {
+        console.log(`smth go wrong`);
+        console.log(err);
+
+        this.createMyCart().subscribe({
+          next: () => {
+            this.snackbarService.show('Basket creted successfully', 'Ok', 2000);
+          },
+        });
+      },
+    });
+  }
+
+  getMyActiveCart(): Observable<Cart> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
     });
 
     return this.http
-      .get<queryAuthorsResponse>(`${this.apiUrl}/me/active-cart`, {
+      .get<Cart>(`${this.apiUrl}/me/active-cart`, {
         headers,
       })
       .pipe(
         tap((responseData) => {
           console.log(responseData);
+          console.log(responseData.id);
+          localStorage.setItem('cartId', responseData.id);
+          this.storageService.myBasket.set(responseData);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
@@ -46,7 +66,7 @@ export class BasketService {
       );
   }
 
-  createMyCart(): Observable<CustomerResponse> {
+  createMyCart(): Observable<Cart> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
@@ -57,10 +77,52 @@ export class BasketService {
     };
 
     return this.http
-      .post<CustomerResponse>(`${this.apiUrl}/me/carts`, body, { headers })
+      .post<Cart>(`${this.apiUrl}/me/carts`, body, { headers })
       .pipe(
         tap((responseData) => {
           console.log(responseData);
+          console.log(responseData.id);
+          this.storageService.myBasket.set(responseData);
+          localStorage.setItem('cartId', responseData.id);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.snackbarService.show(error.error.message, 'Close', 3000);
+          return throwError(() => new Error(error.error.message));
+        }),
+      );
+  }
+
+  updateMyCart(
+    productId: string,
+    action: 'addLineItem' | 'removeLineItem',
+  ): Observable<Cart> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.accessToken}`,
+    });
+
+    const body = {
+      version: this.storageService.myBasket().version,
+      actions: [
+        {
+          action: action,
+          productId: productId,
+          variantId: 1,
+          quantity: 1,
+        },
+      ],
+    };
+
+    const cartId = localStorage.getItem('cartId');
+
+    return this.http
+      .post<Cart>(`${this.apiUrl}/me/carts/${cartId}`, body, { headers })
+      .pipe(
+        tap((responseData) => {
+          console.log(responseData);
+          console.log(responseData.id);
+          this.storageService.myBasket.set(responseData);
+          // localStorage.setItem('cartId', responseData.id);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
