@@ -39,7 +39,7 @@ import { BasketService } from '../../core/services/api/basket.service';
         <button mat-button (click)="goBack()">Back</button>
         @if (this.isItemInBasket()) {
           <button mat-button (click)="removeItemFromCart()">
-            Remove form basket
+            Remove from basket
           </button>
         } @else {
           <button mat-button (click)="addItemToCart()">Add to basket</button>
@@ -73,7 +73,7 @@ export class DetailedProductInformationComponent implements OnInit {
 
   isItemInBasket = signal(false);
   productId = '';
-  itemInBusketid = '';
+  itemInBasketId = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -95,10 +95,10 @@ export class DetailedProductInformationComponent implements OnInit {
       (item) => item.productId === this.productId,
     );
     if (foundItem) {
-      this.itemInBusketid = foundItem.id;
+      this.itemInBasketId = foundItem.id;
       return true;
     }
-    this.itemInBusketid = '';
+    this.itemInBasketId = '';
     return false;
   }
 
@@ -112,7 +112,7 @@ export class DetailedProductInformationComponent implements OnInit {
   }
 
   removeItemFromCart(): void {
-    this.basketService.removeItemFromMyCart(this.itemInBusketid).subscribe();
+    this.basketService.removeItemFromMyCart(this.itemInBasketId).subscribe();
     this.isItemInBasket.set(this.findItemInBasket());
   }
 }

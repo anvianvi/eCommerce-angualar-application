@@ -1,3 +1,4 @@
+import { LineItem } from './line-item';
 import { Product } from './products';
 
 export type Cart = {
@@ -16,7 +17,7 @@ export type Cart = {
   };
   customLineItems: Product[];
   customerId: string;
-  lineItems: Product[];
+  lineItems: LineItem[];
   totalPrice: {
     type: string;
     currencyCode: string;
