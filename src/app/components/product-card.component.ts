@@ -4,6 +4,7 @@ import { LocalSettingsService } from '../core/services/local-settings.service';
 import { Router } from '@angular/router';
 import { ProductPriceBarComponent } from './price-block.component';
 import { MatButtonModule } from '@angular/material/button';
+import { BasketService } from '../core/services/api/basket.service';
 
 @Component({
   standalone: true,
@@ -118,6 +119,7 @@ export class ProductCardComponent {
   constructor(
     private localSettingsService: LocalSettingsService,
     private router: Router,
+    private basketService: BasketService,
   ) {}
 
   openDetailedProductPage(): void {
@@ -128,5 +130,6 @@ export class ProductCardComponent {
     event.stopPropagation();
     console.log('Add to cart button clicked');
     console.log(`add item id: ${this.product.id} to cart`);
+    this.basketService.updateMyCart(this.product.id, 'addLineItem').subscribe();
   }
 }

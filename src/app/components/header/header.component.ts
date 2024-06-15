@@ -1,12 +1,7 @@
 import { Component, computed } from '@angular/core';
 import { ProfileStatusBarComponent } from '../profile-status-bar/profile-status-bar.component';
 import { AuthenticationService } from '../../core/services/authentication.service';
-import {
-  RouterOutlet,
-  RouterLink,
-  RouterLinkActive,
-  Router,
-} from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { StorageService } from '../../core/storage/storage.service';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -62,28 +57,11 @@ export class HeaderComponent {
   });
 
   cartItemsCount = computed(() => {
-    return this.storage.cartItemsCount();
+    return this.storage.myBasket().lineItems.length;
   });
 
   constructor(
     private authenticationService: AuthenticationService,
     private storage: StorageService,
-    private router: Router,
   ) {}
-
-  toCatalog(): void {
-    this.router.navigate(['/']);
-  }
-
-  toLogin(): void {
-    this.router.navigate(['/login']);
-  }
-
-  toRegistration(): void {
-    this.router.navigate(['/registration']);
-  }
-
-  toBasket(): void {
-    this.router.navigate(['/basket']);
-  }
 }
