@@ -10,7 +10,7 @@ import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
 import { Customer } from '../../models/customer';
 
-type updateBody = {
+export type updateBody = {
   version: number;
   actions: action[];
 };

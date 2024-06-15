@@ -37,8 +37,6 @@ mat-accordion {
   }
 }
 
-// All addresses cards
-
 mat-card-content {
   display: flex;
   justify-content: space-between;
@@ -50,4 +48,15 @@ mat-card-header {
 
 mat-card-title {
   font-size: 1rem;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
 }

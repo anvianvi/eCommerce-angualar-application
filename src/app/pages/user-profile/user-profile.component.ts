@@ -8,7 +8,10 @@ import { StorageService } from '../../core/storage/storage.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialog } from '@angular/material/dialog';
 import { Address } from '../../core/models/customer';
+import { EditUserProfileModalComponent } from '../../components/edit-user-profile-modal/edit-user-profile-modal.component';
+import { EditPasswordModalComponent } from '../../components/edit-password-modal/edit-password-modal.component';
 
 @Component({
   imports: [MatCardModule, MatButtonModule, MatExpansionModule],
@@ -35,6 +38,7 @@ export class ProfileComponent implements OnInit {
     private getCustomerService: GetCustomerService,
     private storage: StorageService,
     private snackbarService: SnackbarService,
+    private dialog: MatDialog,
   ) {}
 
   get defaultShippingAddress(): Address | undefined {
@@ -76,5 +80,21 @@ export class ProfileComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  editBasicInfo(): void {
+    this.dialog.open(EditUserProfileModalComponent, {
+      width: '50vw',
+      height: '70vh',
+      data: this.currentCustomer(),
+    });
+  }
+
+  changePassword(): void {
+    this.dialog.open(EditPasswordModalComponent, {
+      width: '50vw',
+      height: '70vh',
+      data: this.currentCustomer(),
+    });
   }
 }
