@@ -27,9 +27,7 @@ export class ProfileComponent implements OnInit {
   customerId = localStorage.getItem('userId');
   accesstoken = localStorage.getItem('AppAccessToken') || '';
 
-  currentCustomer = computed(() => {
-    return this.storage.currentCustomer();
-  });
+  currentCustomer = this.storage.currentCustomer;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -83,10 +81,16 @@ export class ProfileComponent implements OnInit {
   }
 
   editBasicInfo(): void {
-    this.dialog.open(EditUserProfileModalComponent, {
+    const dialogRef = this.dialog.open(EditUserProfileModalComponent, {
       width: '50vw',
       height: '70vh',
       data: this.currentCustomer(),
+    });
+
+    dialogRef.afterClosed().subscribe((success) => {
+      if (success) {
+        this.ngOnInit();
+      }
     });
   }
 

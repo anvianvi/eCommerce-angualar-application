@@ -12,7 +12,8 @@ import { CustomValidatorsService } from '../../core/services/custom-validators.s
 import { FormatDataService } from '../../core/services/format-date.service';
 import { updateBody } from '../../core/services/api/get-customer.service';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaderService } from '../../core/services/api/http-headers.service';
 
 @Component({
   selector: 'app-edit-user-profile-modal',
@@ -31,7 +32,6 @@ export class EditUserProfileModalComponent {
   editUserProfileForm: FormGroup;
   isFormChanged = false;
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken') || '';
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +39,7 @@ export class EditUserProfileModalComponent {
     private customValidators: CustomValidatorsService,
     private formatData: FormatDataService,
     private snackbarService: SnackbarService,
+    private headerService: HttpHeaderService,
     public dialogRef: MatDialogRef<EditUserProfileModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Customer,
   ) {
@@ -125,21 +126,11 @@ export class EditUserProfileModalComponent {
   }
 
   onCancel(): void {
-    this.editUserProfileForm.reset({
-      email: this.data.email || '',
-      firstName: this.data.firstName || '',
-      lastName: this.data.lastName || '',
-      dateOfBirth: this.data.dateOfBirth || '',
-    });
-    this.isFormChanged = false;
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   onSave(): void {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     this.http
       .post<Customer>(
@@ -151,7 +142,7 @@ export class EditUserProfileModalComponent {
       )
       .subscribe(() => {
         this.snackbarService.show('Successfully updated data', 'Close', 3000);
-        window.location.reload();
+        this.dialogRef.close(true);
       });
   }
 }

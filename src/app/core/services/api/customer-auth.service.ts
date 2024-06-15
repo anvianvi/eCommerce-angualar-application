@@ -1,13 +1,10 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { CustomerResponse } from '../../interfaces/interfaces';
 import { SnackbarService } from '../mat-snackbar.service';
 import { environment } from '../../../environment/environment';
+import { HttpHeaderService } from './http-headers.service';
 
 export type CustomerRegistrationForm = {
   email: string;
@@ -30,18 +27,15 @@ export type CustomerRegistrationForm = {
 })
 export class CustomerAuthService {
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken');
 
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
+    private headerService: HttpHeaderService,
   ) {}
 
   createCustomer(body: CustomerRegistrationForm): Observable<CustomerResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     return this.http
       .post<CustomerResponse>(`${this.apiUrl}/customers`, body, { headers })
@@ -54,10 +48,7 @@ export class CustomerAuthService {
   }
 
   customerLogin(email: string, password: string): Observable<CustomerResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     return this.http
       .post<CustomerResponse>(

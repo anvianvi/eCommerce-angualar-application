@@ -3,13 +3,13 @@ import { SnackbarService } from '../mat-snackbar.service';
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { queryProductsResponse } from '../../models/products';
 import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
+import { HttpHeaderService } from './http-headers.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,18 +22,16 @@ export class GetProductsService {
   filterAuthorsList = signal<string[]>([]);
 
   private apiUrl = `${environment.host}/${environment.project_key}`;
-  private accessToken = localStorage.getItem('AppAccessToken') || '';
+
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
     private storageService: StorageService,
+    private headerService: HttpHeaderService,
   ) {}
 
   queryProducts(): Observable<queryProductsResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.accessToken}`,
-    });
+    const headers = this.headerService.getHeader();
 
     const quotedAuthors = this.filterAuthorsList()
       .map((author) => `"${author}"`)
