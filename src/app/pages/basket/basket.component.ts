@@ -3,11 +3,18 @@ import { BasketService } from '../../core/services/api/basket.service';
 import { MatButtonModule } from '@angular/material/button';
 import { StorageService } from '../../core/storage/storage.service';
 import { CurrencyFormatterPipe } from '../../core/pipes/currency-formatter.pipe';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-basket',
   standalone: true,
-  imports: [MatButtonModule, CurrencyFormatterPipe],
+  imports: [
+    MatButtonModule,
+    CurrencyFormatterPipe,
+    RouterLinkActive,
+    RouterOutlet,
+    RouterLink,
+  ],
   template: `<button
       mat-flat-button
       color="primary"
@@ -55,7 +62,10 @@ import { CurrencyFormatterPipe } from '../../core/pipes/currency-formatter.pipe'
               </td>
             </tr>
           } @empty {
-            <h3>Your cart is empty.</h3>
+            <h3 style="text-align: center;">
+              Your cart is empty. Continue shopping in our
+              <button mat-button routerLink="/" color="primary">catalog</button>
+            </h3>
           }
         </tbody>
       </table>
