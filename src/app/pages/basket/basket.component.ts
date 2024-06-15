@@ -77,14 +77,19 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       </table>
     </div>
     @if (cart().lineItems.length > 0) {
-      <div style="width:fit-content;margin-left: auto;">
-        <strong>Total Price: </strong>
-        {{
-          cart().totalPrice.centAmount
-            | currencyFormatter
-              : cart().totalPrice.currencyCode
-              : cart().totalPrice.fractionDigits
-        }}
+      <div style="width:fit-content;margin-left: auto;padding: 20px">
+        <div style="margin-bottom: 20px;">
+          <strong>Total Price: </strong>
+          {{
+            cart().totalPrice.centAmount
+              | currencyFormatter
+                : cart().totalPrice.currencyCode
+                : cart().totalPrice.fractionDigits
+          }}
+        </div>
+        <button mat-button color="warn" (click)="clearBasket()">
+          Clear Shopping Cart
+        </button>
       </div>
     }`,
   styleUrl: './basket.component.scss',
@@ -109,6 +114,9 @@ export class BasketComponent implements OnInit {
     this.basketService.removeItemFromMyCart(productId).subscribe();
   }
 
+  clearBasket(): void {
+    this.basketService.clearMyCart().subscribe();
+  }
   getMyActiveCart(): void {
     console.log('test fetch');
     this.basketService.getMyActiveCart().subscribe({

@@ -56,6 +56,7 @@ export class BasketService {
         tap((responseData) => {
           localStorage.setItem('cartId', responseData.id);
           this.storageService.myBasket.set(responseData);
+          this.getMyActiveCart().subscribe();
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
@@ -152,6 +153,32 @@ export class BasketService {
       .pipe(
         tap((responseData) => {
           this.storageService.myBasket.set(responseData);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.snackbarService.show(error.error.message, 'Close', 3000);
+          return throwError(() => new Error(error.error.message));
+        }),
+      );
+  }
+
+  clearMyCart(): Observable<Cart> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.accessToken}`,
+    });
+
+    const cartId = localStorage.getItem('cartId');
+    const cartVersion = this.cart().version;
+
+    return this.http
+      .delete<Cart>(
+        `${this.apiUrl}/me/carts/${cartId}?version=${cartVersion}`,
+        { headers },
+      )
+      .pipe(
+        tap((responseData) => {
+          this.storageService.myBasket.set(responseData);
+          this.getMyActiveCart().subscribe();
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
