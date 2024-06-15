@@ -92,9 +92,9 @@ export class BasketService {
       );
   }
 
-  updateMyCart(
+  addItemToMyCart(
     productId: string,
-    action: 'addLineItem' | 'removeLineItem',
+    // action: | 'removeLineItem',
   ): Observable<Cart> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -105,10 +105,48 @@ export class BasketService {
       version: this.storageService.myBasket().version,
       actions: [
         {
-          action: action,
+          action: 'addLineItem',
           productId: productId,
+          // lineItemId: productId,
           variantId: 1,
           quantity: 1,
+        },
+      ],
+    };
+
+    const cartId = localStorage.getItem('cartId');
+
+    return this.http
+      .post<Cart>(`${this.apiUrl}/me/carts/${cartId}`, body, { headers })
+      .pipe(
+        tap((responseData) => {
+          console.log(responseData);
+          console.log(responseData.id);
+          this.storageService.myBasket.set(responseData);
+          // localStorage.setItem('cartId', responseData.id);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.snackbarService.show(error.error.message, 'Close', 3000);
+          return throwError(() => new Error(error.error.message));
+        }),
+      );
+  }
+
+  removeItemFromMyCart(productId: string): Observable<Cart> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.accessToken}`,
+    });
+
+    const body = {
+      version: this.storageService.myBasket().version,
+      actions: [
+        {
+          action: 'removeLineItem',
+          // productId: productId,
+          lineItemId: productId,
+          variantId: 1,
+          // quantity: 1,
         },
       ],
     };
