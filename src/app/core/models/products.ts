@@ -3,6 +3,7 @@ export type Product = {
     id: string;
     typeId: string;
   }>;
+  productId?: string;
   categoryOrderHints: Record<string, string>;
   createdAt: string;
   description: {

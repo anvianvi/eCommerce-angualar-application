@@ -2,6 +2,7 @@ import { Component, Input, OnInit, computed, signal } from '@angular/core';
 import { Product } from '../core/models/products';
 import { CurrencyFormatterPipe } from '../core/pipes/currency-formatter.pipe';
 import { StorageService } from '../core/storage/storage.service';
+import { GetProductsDiscountsService } from '../core/services/api/get-discounts.service';
 
 @Component({
   imports: [CurrencyFormatterPipe],
@@ -76,9 +77,13 @@ export class ProductPriceBarComponent implements OnInit {
     return this.storageService.productDiscounts();
   });
 
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private getProductsDiscountsService: GetProductsDiscountsService,
+  ) {}
 
   ngOnInit(): void {
+    this.getProductsDiscountsService.queryProductsDiscounts().subscribe();
     const productCategory = this.product.categories[0]?.id;
     const productDiscount = this.productDiscounts()[0];
 

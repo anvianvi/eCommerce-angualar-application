@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Product, emptyProduct } from '../models/products';
 import { Discount } from '../models/discounts';
 import { Customer, emptyCustomer } from '../models/customer';
+import { Cart, emptyCart } from '../models/cart';
 
 @Injectable({
   providedIn: 'root',
@@ -13,4 +14,5 @@ export class StorageService {
   currentCustomer = signal<Customer>(emptyCustomer);
   authors = signal<string[]>([]);
   cartItemsCount = signal(0);
+  myBasket = signal<Cart>(emptyCart);
 }
