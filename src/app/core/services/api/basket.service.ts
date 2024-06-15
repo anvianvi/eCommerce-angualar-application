@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, computed } from '@angular/core';
 import { SnackbarService } from '../mat-snackbar.service';
 import {
   HttpClient,
@@ -8,20 +8,23 @@ import {
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from '../../../environment/environment';
 import { StorageService } from '../../storage/storage.service';
-import { GetProductsService } from './get-products.service';
 import { Cart } from '../../models/cart';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BasketService {
+  cart = computed(() => {
+    return this.storageService.myBasket();
+  });
+
   private apiUrl = `${environment.host}/${environment.project_key}`;
   private accessToken = localStorage.getItem('CustomerAccessToken') || '';
+
   constructor(
     private http: HttpClient,
     private snackbarService: SnackbarService,
     private storageService: StorageService,
-    private getProductsService: GetProductsService,
   ) {}
 
   getBasket(): void {
@@ -29,10 +32,7 @@ export class BasketService {
       next: () => {
         this.snackbarService.show('Basket fetched successfully', 'Ok', 2000);
       },
-      error: (err) => {
-        console.log(`smth go wrong`);
-        console.log(err);
-
+      error: () => {
         this.createMyCart().subscribe({
           next: () => {
             this.snackbarService.show('Basket creted successfully', 'Ok', 2000);
@@ -54,8 +54,6 @@ export class BasketService {
       })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
-          console.log(responseData.id);
           localStorage.setItem('cartId', responseData.id);
           this.storageService.myBasket.set(responseData);
         }),
@@ -80,8 +78,6 @@ export class BasketService {
       .post<Cart>(`${this.apiUrl}/me/carts`, body, { headers })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
-          console.log(responseData.id);
           this.storageService.myBasket.set(responseData);
           localStorage.setItem('cartId', responseData.id);
         }),
@@ -92,10 +88,7 @@ export class BasketService {
       );
   }
 
-  addItemToMyCart(
-    productId: string,
-    // action: | 'removeLineItem',
-  ): Observable<Cart> {
+  addItemToMyCart(productId: string): Observable<Cart> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
@@ -107,7 +100,6 @@ export class BasketService {
         {
           action: 'addLineItem',
           productId: productId,
-          // lineItemId: productId,
           variantId: 1,
           quantity: 1,
         },
@@ -120,10 +112,7 @@ export class BasketService {
       .post<Cart>(`${this.apiUrl}/me/carts/${cartId}`, body, { headers })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
-          console.log(responseData.id);
           this.storageService.myBasket.set(responseData);
-          // localStorage.setItem('cartId', responseData.id);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);
@@ -137,16 +126,21 @@ export class BasketService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
     });
+    let itemInBasketId;
+    const foundItem = this.cart().lineItems.find(
+      (item) => item.productId === productId,
+    );
+    if (foundItem) {
+      itemInBasketId = foundItem.id;
+    }
 
     const body = {
       version: this.storageService.myBasket().version,
       actions: [
         {
           action: 'removeLineItem',
-          // productId: productId,
-          lineItemId: productId,
+          lineItemId: itemInBasketId,
           variantId: 1,
-          // quantity: 1,
         },
       ],
     };
@@ -157,10 +151,7 @@ export class BasketService {
       .post<Cart>(`${this.apiUrl}/me/carts/${cartId}`, body, { headers })
       .pipe(
         tap((responseData) => {
-          console.log(responseData);
-          console.log(responseData.id);
           this.storageService.myBasket.set(responseData);
-          // localStorage.setItem('cartId', responseData.id);
         }),
         catchError((error: HttpErrorResponse) => {
           this.snackbarService.show(error.error.message, 'Close', 3000);

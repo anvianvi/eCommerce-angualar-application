@@ -35,6 +35,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
               <th>Name</th>
               <th>Author</th>
               <th>Price</th>
+              <th>Actions</th>
             </tr>
           </thead>
         }
@@ -59,6 +60,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
                       : item.price.value.currencyCode
                       : item.price.value.fractionDigits
                 }}
+              </td>
+              <td>
+                <button mat-button (click)="removeItemFromCart(item.productId)">
+                  Remove from basket
+                </button>
               </td>
             </tr>
           } @empty {
@@ -96,6 +102,11 @@ export class BasketComponent implements OnInit {
   ngOnInit(): void {
     this.basketService.getBasket();
     console.log('init');
+    console.log(this.cart());
+  }
+
+  removeItemFromCart(productId: string): void {
+    this.basketService.removeItemFromMyCart(productId).subscribe();
   }
 
   getMyActiveCart(): void {

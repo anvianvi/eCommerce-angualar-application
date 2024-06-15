@@ -73,7 +73,6 @@ export class DetailedProductInformationComponent implements OnInit {
 
   isItemInBasket = signal(false);
   productId = '';
-  itemInBasketId = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -95,10 +94,8 @@ export class DetailedProductInformationComponent implements OnInit {
       (item) => item.productId === this.productId,
     );
     if (foundItem) {
-      this.itemInBasketId = foundItem.id;
       return true;
     }
-    this.itemInBasketId = '';
     return false;
   }
 
@@ -112,7 +109,7 @@ export class DetailedProductInformationComponent implements OnInit {
   }
 
   removeItemFromCart(): void {
-    this.basketService.removeItemFromMyCart(this.itemInBasketId).subscribe();
+    this.basketService.removeItemFromMyCart(this.productId).subscribe();
     this.isItemInBasket.set(this.findItemInBasket());
   }
 }
